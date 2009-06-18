@@ -15,15 +15,15 @@ describe Memento::Action::Update, "when object gets updated" do
     shutdown_db
   end
     
-  it "should create memento_track for ar-object from changes_for_recording" do
-    Memento::Track.count.should eql(1)
-    Memento::Track.first.action_type.should eql("update")
-    Memento::Track.first.recorded_object.should eql(@project)
-    Memento::Track.first.recorded_data.keys.sort.should eql(%w(name closed_at customer_id).sort)
-    Memento::Track.first.recorded_data["name"].should eql(["P1", "P2"])
-    Memento::Track.first.recorded_data["customer_id"].should eql([nil, @customer.id])
-    Memento::Track.first.recorded_data["closed_at"][0].utc.to_s.should eql(3.days.ago.utc.to_s)
-    Memento::Track.first.recorded_data["closed_at"][1].utc.to_s.should eql(2.days.ago.utc.to_s)
+  it "should create memento_state for ar-object from changes_for_recording" do
+    Memento::State.count.should eql(1)
+    Memento::State.first.action_type.should eql("update")
+    Memento::State.first.recorded_object.should eql(@project)
+    Memento::State.first.recorded_data.keys.sort.should eql(%w(name closed_at customer_id).sort)
+    Memento::State.first.recorded_data["name"].should eql(["P1", "P2"])
+    Memento::State.first.recorded_data["customer_id"].should eql([nil, @customer.id])
+    Memento::State.first.recorded_data["closed_at"][0].utc.to_s.should eql(3.days.ago.utc.to_s)
+    Memento::State.first.recorded_data["closed_at"][1].utc.to_s.should eql(2.days.ago.utc.to_s)
   end
   
   it "should update object" do
@@ -59,7 +59,7 @@ describe Memento::Action::Update, "when object gets updated" do
   
   describe "when recorded_object was changed before undo" do
     
-    describe "with mergeable untracked changes" do
+    describe "with mergeable unstateed changes" do
       before do
         @project.update_attributes({:notes => "Bla!"})
         @result = Memento::Session.first.rewind.first
@@ -79,12 +79,12 @@ describe Memento::Action::Update, "when object gets updated" do
       end
     end
   
-    describe "with mergeable tracked changes" do
+    describe "with mergeable stateed changes" do
       before do
         Memento.instance.recording(@user) do
           @project.update_attributes({:notes => "Bla!"})
         end
-        Memento::Track.last.update_attribute(:created_at, 1.minute.from_now)
+        Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
         @result = Memento::Session.first.rewind.first
         @object = @result.object
       end
@@ -101,7 +101,7 @@ describe Memento::Action::Update, "when object gets updated" do
         @object.notes.should eql("Bla!")
       end
     
-      describe "when second track is rewinded" do
+      describe "when second state is rewinded" do
         before do
           @result = Memento::Session.first.rewind.first
           @object = @result.object
@@ -121,7 +121,7 @@ describe Memento::Action::Update, "when object gets updated" do
       end
     end
 
-    describe "with unmergeable untracked changes" do
+    describe "with unmergeable unstateed changes" do
       before do
         @project.update_attributes({:name => "P3"})
         @result = Memento::Session.last.rewind.first
@@ -140,12 +140,12 @@ describe Memento::Action::Update, "when object gets updated" do
       end
     end
     
-    describe "with unmergeable tracked changes" do
+    describe "with unmergeable stateed changes" do
       before do
         Memento.instance.recording(@user) do
           @project.update_attributes!({:name => "P3"})
         end
-        Memento::Track.last.update_attribute(:created_at, 1.minute.from_now)
+        Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
         @result = Memento::Session.first.rewind.first
         @object = @result.object
       end
@@ -161,7 +161,7 @@ describe Memento::Action::Update, "when object gets updated" do
         @object.should_not be_changed
       end
       
-      describe "when second track is rewinded" do
+      describe "when second state is rewinded" do
         before do
           @result = Memento::Session.last.rewind.first
           @object = @result.object

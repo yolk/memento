@@ -70,7 +70,7 @@ describe Memento do
       Memento.instance.should_not be_recording
     end
     
-    it "should remove session if no tracks created" do
+    it "should remove session if no states created" do
       Memento::Session.count.should eql(0)
     end
   end
@@ -112,17 +112,17 @@ describe Memento do
       Memento.instance.stop
     end
     
-    it "should create memento_track for ar-object with action_type" do
-      Memento::Track.count.should eql(0)
-      Memento.instance.add_track :destroy, @project
-      Memento::Track.count.should eql(1)
-      Memento::Track.first.action_type.should eql("destroy")
-      Memento::Track.first.recorded_object.should eql(Project.last)
+    it "should create memento_state for ar-object with action_type" do
+      Memento::State.count.should eql(0)
+      Memento.instance.add_state :destroy, @project
+      Memento::State.count.should eql(1)
+      Memento::State.first.action_type.should eql("destroy")
+      Memento::State.first.recorded_object.should eql(Project.last)
     end
     
-    it "should save session on first added track" do
+    it "should save session on first added state" do
       Memento::Session.count.should eql(0)
-      Memento.instance.add_track :destroy, @project
+      Memento.instance.add_state :destroy, @project
       Memento::Session.count.should eql(1)
     end
     
@@ -130,9 +130,9 @@ describe Memento do
   
   describe "when not recording" do
     
-    it "should NOT create memento_track for ar-object with action_type" do
-      Memento.instance.add_track :destroy, Project.create(:name => "P1")
-      Memento::Track.count.should eql(0)
+    it "should NOT create memento_state for ar-object with action_type" do
+      Memento.instance.add_state :destroy, Project.create(:name => "P1")
+      Memento::State.count.should eql(0)
     end
     
   end

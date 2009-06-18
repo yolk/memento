@@ -5,16 +5,16 @@ describe Memento::Result do
   describe "when initalized with valid object" do
     before do
       @object = mock("object", :errors => {})
-      @track = mock("track1")
-      @result = Memento::Result.new(@object, @track)
+      @state = mock("state1")
+      @result = Memento::Result.new(@object, @state)
     end
 
     it "should have an object attribute" do
       @result.object.should eql(@object)
     end
     
-    it "should have an track attribute" do
-      @result.track.should eql(@track)
+    it "should have an state attribute" do
+      @result.state.should eql(@state)
     end
 
     it "should have an error attribute" do
@@ -30,7 +30,7 @@ describe Memento::Result do
   describe "when initalized with object with errors" do
     before do
       @object = mock("object", :errors => {:memento_rewind => "123"})
-      @result = Memento::Result.new(@object, mock("track1"))
+      @result = Memento::Result.new(@object, mock("state1"))
     end
     
     it "should have an object attribute" do
@@ -67,8 +67,8 @@ describe Memento::ResultArray do
   describe "when Memento::Result without errors added" do
     before do
       @object = mock("object", :errors => {:memento_rewind => "123"})
-      @results << Memento::Result.new(mock("object2", :errors => {}), mock("track1"))
-      @results << (@with_error = Memento::Result.new(@object, mock("track2")))
+      @results << Memento::Result.new(mock("object2", :errors => {}), mock("state1"))
+      @results << (@with_error = Memento::Result.new(@object, mock("state2")))
     end
     
     it "should have two entrys" do

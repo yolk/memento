@@ -5,9 +5,9 @@ class Memento::Action::Destroy < Memento::Action::Base
   end
   
   def rewind
-    @track.rebuild_object(:id) do |object|
+    @state.rebuild_object(:id) do |object|
       object.save!
-      @track.update_attribute(:recorded_object, object)
+      @state.update_attribute(:recorded_object, object)
     end
   end
   

@@ -37,9 +37,9 @@ class Memento::Action::Update < Memento::Action::Base
   end
   
   def was_destroyed
-    @track.new_object do |object|
+    @state.new_object do |object|
       object.errors.add(:memento_rewind, ActiveSupport::StringInquirer.new("was_destroyed"))
-      object.id = @track.recorded_object_id
+      object.id = @state.recorded_object_id
     end
   end
   

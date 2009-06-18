@@ -14,11 +14,11 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
     shutdown_db
   end
     
-  it "should create memento_track for ar-object with full attributes_for_recording" do
-    Memento::Track.count.should eql(1)
-    Memento::Track.first.action_type.should eql("destroy")
-    Memento::Track.first.recorded_object.should be_nil # it was destroyed, remember?
-    Memento::Track.first.reload.recorded_data.should == @project.attributes_for_recording
+  it "should create memento_state for ar-object with full attributes_for_recording" do
+    Memento::State.count.should eql(1)
+    Memento::State.first.action_type.should eql("destroy")
+    Memento::State.first.recorded_object.should be_nil # it was destroyed, remember?
+    Memento::State.first.reload.recorded_data.should == @project.attributes_for_recording
   end
   
   it "should destroy object" do

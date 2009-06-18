@@ -47,7 +47,7 @@ def setup_db
       t.timestamps
     end
     
-    create_table :memento_tracks do |t|
+    create_table :memento_states do |t|
       t.string :action_type
       t.binary :recorded_data, :limit => 1.megabytes
       t.references :recorded_object, :polymorphic => true

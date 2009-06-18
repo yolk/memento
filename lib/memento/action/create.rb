@@ -19,11 +19,11 @@ class Memento::Action::Create < Memento::Action::Base
   end
   
   def build_fake_object
-    if destroy_track = @track.later_tracks_on_recorded_object_for(:destroy).last
-      destroy_track.rebuild_object
+    if destroy_state = @state.later_states_on_recorded_object_for(:destroy).last
+      destroy_state.rebuild_object
     else
-      @track.new_object do |object|
-        object.id = @track.recorded_object_id
+      @state.new_object do |object|
+        object.id = @state.recorded_object_id
       end
     end
   end

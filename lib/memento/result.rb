@@ -16,10 +16,10 @@ end
 
 class Memento::Result
   
-  attr_reader :object, :track
+  attr_reader :object, :state
   
-  def initialize(object, track)
-    @object, @track = object, track
+  def initialize(object, state)
+    @object, @state = object, state
   end
   
   def error

@@ -1,21 +1,21 @@
 class Memento::Session < ActiveRecord::Base
   set_table_name "memento_sessions"
   
-  has_many :tracks, :class_name => "Memento::Track", :dependent => :delete_all
+  has_many :states, :class_name => "Memento::State", :dependent => :delete_all
   belongs_to :user
   validates_presence_of :user
   
-  def add_track(action_type, recorded_object)
-    tracks.create(:action_type => action_type.to_s, :recorded_object => recorded_object)
+  def add_state(action_type, recorded_object)
+    states.create(:action_type => action_type.to_s, :recorded_object => recorded_object)
   end
   
   def rewind
-    tracks.map(&:rewind).inject(Memento::ResultArray.new) do |results, result|
-      result.track.destroy if result.success?
+    states.map(&:rewind).inject(Memento::ResultArray.new) do |results, result|
+      result.state.destroy if result.success?
       results << result
     end
   ensure
-    destroy if tracks.count.zero?
+    destroy if states.count.zero?
   end
   
   def rewind!

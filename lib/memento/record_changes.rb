@@ -18,7 +18,7 @@ module Memento::RecordChanges
         send :"after_#{action_type}", :"record_#{action_type}" unless callback_exists
       end
       
-      has_many :memento_tracks, :class_name => "Memento::Track", :as => :recorded_object
+      has_many :memento_states, :class_name => "Memento::State", :as => :recorded_object
     end
   end
   
@@ -36,7 +36,7 @@ module Memento::RecordChanges
     
     Memento::Action::Base.action_types.each do |action_type|
       define_method :"record_#{action_type}" do
-        Memento.instance.add_track(action_type, self)
+        Memento.instance.add_state(action_type, self)
       end
     end
   end

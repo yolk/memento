@@ -31,7 +31,7 @@ describe Memento::RecordInController do
       project.update_attribute(:name, "P7")
     end
     project.reload.name.should eql("P7")
-    project.memento_tracks.count.should eql(1)
+    project.memento_states.count.should eql(1)
     Memento::Session.count.should eql(1)
   end
   

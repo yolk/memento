@@ -1,5 +1,5 @@
-class Memento::Track < ActiveRecord::Base
-  set_table_name "memento_tracks"
+class Memento::State < ActiveRecord::Base
+  set_table_name "memento_states"
   
   belongs_to :session, :class_name => "Memento::Session"
   belongs_to :recorded_object, :polymorphic => true
@@ -40,8 +40,8 @@ class Memento::Track < ActiveRecord::Base
     end
   end
   
-  def later_tracks_on_recorded_object_for(action_type_param)
-    Memento::Track.all(:conditions => [
+  def later_states_on_recorded_object_for(action_type_param)
+    Memento::State.all(:conditions => [
       "recorded_object_id = ? AND recorded_object_type = ? AND " + 
       "action_type = ? AND created_at >= ? AND id != ? ", 
       recorded_object_id, recorded_object_type, action_type_param.to_s, created_at, id

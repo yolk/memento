@@ -13,11 +13,11 @@ describe Memento::Action::Create, "when object is created" do
     shutdown_db
   end
     
-  it "should create memento_track for ar-object with no data" do
-    Memento::Track.count.should eql(1)
-    Memento::Track.first.action_type.should eql("create")
-    Memento::Track.first.recorded_object.should eql(@project) # it was destroyed, remember?
-    Memento::Track.first.reload.recorded_data.should eql(nil)
+  it "should create memento_state for ar-object with no data" do
+    Memento::State.count.should eql(1)
+    Memento::State.first.action_type.should eql("create")
+    Memento::State.first.recorded_object.should eql(@project) # it was destroyed, remember?
+    Memento::State.first.reload.recorded_data.should eql(nil)
   end
   
   it "should create object" do
@@ -56,9 +56,9 @@ describe Memento::Action::Create, "when object is created" do
         Project.count.should eql(0)
       end
     
-      it "should give back fake unsaved record with all data set when destruction was tracked" do
+      it "should give back fake unsaved record with all data set when destruction was stateed" do
         Memento.instance.recording(@user) { Project.last.destroy }
-        Memento::Track.last.update_attribute(:created_at, 5.minutes.from_now)
+        Memento::State.last.update_attribute(:created_at, 5.minutes.from_now)
         @rewinded = Memento::Session.first.rewind
         @rewinded.size.should eql(1)
         @rewinded.first.object.should be_kind_of(Project)

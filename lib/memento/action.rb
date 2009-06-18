@@ -1,16 +1,16 @@
 module Memento::Action
   
   class Base
-    def initialize(track)
-      @track = track
+    def initialize(state)
+      @state = state
     end
     
     def recorded_object
-      @track.recorded_object
+      @state.recorded_object
     end
     
     def recorded_data
-      @track.recorded_data
+      @state.recorded_data
     end
     
     def self.inherited(child)

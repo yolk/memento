@@ -20,9 +20,9 @@ class Memento
     @session = nil
   end
   
-  def add_track(action_type, recorded_object)
+  def add_state(action_type, recorded_object)
     return unless save_session
-    @session.add_track(action_type, recorded_object)
+    @session.add_state(action_type, recorded_object)
   end
   
   def recording?
@@ -40,5 +40,5 @@ require 'memento/result'
 require 'memento/action'
 require 'memento/record_changes'
 require 'memento/record_in_controller'
-require 'memento/track'
+require 'memento/state'
 require 'memento/session'
