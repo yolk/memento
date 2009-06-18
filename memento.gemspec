@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{memento}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yolk Sebastian Munz & Julia Soergel GbR"]
@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.2}
-  s.summary = %q{TODO}
+  s.summary = %q{Undo for Rails/ActiveRecord - covers destroy, update and create}
   s.test_files = [
     "spec/memento/action/create_spec.rb",
     "spec/memento/action/destroy_spec.rb",
