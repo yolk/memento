@@ -27,9 +27,11 @@ class Tapedeck::Action::Update < Tapedeck::Action::Base
   
   def mergable?
     recorded_data.all? do |attribute, values|
+      # ugly fix to compare times
       values = values.map{|v| v.is_a?(Time) ? v.to_s(:db) : v }
       current_value = recorded_object.send(:"#{attribute}")
       current_value = current_value.utc.to_s(:db) if current_value.is_a?(Time)
+      
       values.include?(current_value) 
     end || recorded_data.size.zero?
   end
