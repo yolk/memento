@@ -1,6 +1,6 @@
 class Memento::Action::Update < Memento::Action::Base
   
-  def record
+  def fetch
     record.changes_for_recording
   end
   

@@ -1,6 +1,6 @@
 class Memento::Action::Create < Memento::Action::Base
   
-  def record;end
+  def fetch;end
   
   def rewind
     if record.nil?

@@ -51,7 +51,7 @@ class Memento::State < ActiveRecord::Base
   private
   
   def set_record_data
-    self.record_data = action.record
+    self.record_data = action.fetch
   end
   
   def action

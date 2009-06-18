@@ -1,6 +1,6 @@
 class Memento::Action::Destroy < Memento::Action::Base
   
-  def record
+  def fetch
     record.attributes_for_recording
   end
   
