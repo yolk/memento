@@ -5,10 +5,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "memento"
-    gem.summary = %Q{TODO}
+    gem.summary = %Q{Undo for Rails/ActiveRecord - covers destroy, update and create}
     gem.email = "sebastian@yo.lk"
     gem.homepage = "http://github.com/yolk/memento"
-    gem.authors = ["Sebastian Munz"]
+    gem.authors = ["Yolk Sebastian Munz & Julia Soergel GbR"]
 
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
