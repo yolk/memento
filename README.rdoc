@@ -1,7 +1,3 @@
 = memento
 
-Description goes here.
-
-== Copyright
-
 Copyright (c) 2009 Sebastian Munz. See LICENSE for details.
