@@ -36,8 +36,8 @@ describe Memento::State do
       @state = @session.states.create!(:action_type => "destroy", :record => @project = Project.create(:name => "A") )
     end
     
-    it "should give back Memento::Result on undoing" do
-      result = @state.undoing
+    it "should give back Memento::Result on undo" do
+      result = @state.undo
       result.should be_a(Memento::Result)
       result.object.should be_a(Project)
       result.state.should eql(@state)

@@ -4,7 +4,7 @@ class Memento::Action::Destroy < Memento::Action::Base
     record.attributes_for_recording
   end
   
-  def undoing
+  def undo
     @state.rebuild_object(:id) do |object|
       object.save!
       @state.update_attribute(:record, object)

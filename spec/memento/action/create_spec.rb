@@ -26,18 +26,18 @@ describe Memento::Action::Create, "when object is created" do
   end
   
   it "should allow undoing the creation" do
-    Memento::Session.last.undoing
+    Memento::Session.last.undo
     Project.count.should eql(0)
   end
   
   describe "when undoing the creation" do
     it "should give back undone_object" do
-      Memento::Session.last.undoing.map{|e| e.object.class }.should eql([Project])
+      Memento::Session.last.undo.map{|e| e.object.class }.should eql([Project])
     end
 
-    it "should not undoing the creatio if object was modified" do
+    it "should not undo the creatio if object was modified" do
       Project.last.update_attribute(:created_at, 1.minute.ago)
-      undone = Memento::Session.last.undoing
+      undone = Memento::Session.last.undo
       Project.count.should eql(1)
       undone.first.should_not be_success
       undone.first.error.should be_was_changed
@@ -47,7 +47,7 @@ describe Memento::Action::Create, "when object is created" do
       
       it "should give back fake unsaved record with id set" do
         Project.last.destroy
-        @undone = Memento::Session.last.undoing
+        @undone = Memento::Session.last.undo
         @undone.size.should eql(1)
         @undone.first.object.should be_kind_of(Project)
         @undone.first.object.id.should eql(@project.id)
@@ -59,7 +59,7 @@ describe Memento::Action::Create, "when object is created" do
       it "should give back fake unsaved record with all data set when destruction was stateed" do
         Memento.instance.recording(@user) { Project.last.destroy }
         Memento::State.last.update_attribute(:created_at, 5.minutes.from_now)
-        @undone = Memento::Session.first.undoing
+        @undone = Memento::Session.first.undo
         @undone.size.should eql(1)
         @undone.first.object.should be_kind_of(Project)
         @undone.first.object.id.should eql(@project.id)

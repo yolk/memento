@@ -29,7 +29,7 @@ describe Memento::Result do
   
   describe "when initalized with object with errors" do
     before do
-      @object = mock("object", :errors => {:memento_undoing => "123"})
+      @object = mock("object", :errors => {:memento_undo => "123"})
       @result = Memento::Result.new(@object, mock("state1"))
     end
     
@@ -66,7 +66,7 @@ describe Memento::ResultArray do
   
   describe "when Memento::Result without errors added" do
     before do
-      @object = mock("object", :errors => {:memento_undoing => "123"})
+      @object = mock("object", :errors => {:memento_undo => "123"})
       @results << Memento::Result.new(mock("object2", :errors => {}), mock("state1"))
       @results << (@with_error = Memento::Result.new(@object, mock("state2")))
     end

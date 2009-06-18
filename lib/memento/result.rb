@@ -23,7 +23,7 @@ class Memento::Result
   end
   
   def error
-    @object.errors[:memento_undoing]
+    @object.errors[:memento_undo]
   end
   
   def failed?

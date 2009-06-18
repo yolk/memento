@@ -35,7 +35,7 @@ describe Memento::Action::Update, "when object gets updated" do
   end
   
   it "should allow undoing the update" do
-    undone = Memento::Session.last.undoing.first
+    undone = Memento::Session.last.undo.first
     undone.should be_success
     undone.object.should_not be_changed
     undone.object.name.should eql("P1")
@@ -49,7 +49,7 @@ describe Memento::Action::Update, "when object gets updated" do
     end
     
     it "should return fake object with error" do
-      undone = Memento::Session.last.undoing.first
+      undone = Memento::Session.last.undo.first
       undone.should_not be_success
       undone.error.should be_was_destroyed
       undone.object.class.should eql(Project)
@@ -62,7 +62,7 @@ describe Memento::Action::Update, "when object gets updated" do
     describe "with mergeable unstateed changes" do
       before do
         @project.update_attributes({:notes => "Bla!"})
-        @result = Memento::Session.first.undoing.first
+        @result = Memento::Session.first.undo.first
         @object = @result.object
       end
     
@@ -85,7 +85,7 @@ describe Memento::Action::Update, "when object gets updated" do
           @project.update_attributes({:notes => "Bla!"})
         end
         Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
-        @result = Memento::Session.first.undoing.first
+        @result = Memento::Session.first.undo.first
         @object = @result.object
       end
     
@@ -103,7 +103,7 @@ describe Memento::Action::Update, "when object gets updated" do
     
       describe "when second state is undone" do
         before do
-          @result = Memento::Session.first.undoing.first
+          @result = Memento::Session.first.undo.first
           @object = @result.object
         end
     
@@ -124,7 +124,7 @@ describe Memento::Action::Update, "when object gets updated" do
     describe "with unmergeable unstateed changes" do
       before do
         @project.update_attributes({:name => "P3"})
-        @result = Memento::Session.last.undoing.first
+        @result = Memento::Session.last.undo.first
         @object = @result.object
       end
 
@@ -146,7 +146,7 @@ describe Memento::Action::Update, "when object gets updated" do
           @project.update_attributes!({:name => "P3"})
         end
         Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
-        @result = Memento::Session.first.undoing.first
+        @result = Memento::Session.first.undo.first
         @object = @result.object
       end
     
@@ -163,7 +163,7 @@ describe Memento::Action::Update, "when object gets updated" do
       
       describe "when second state is undone" do
         before do
-          @result = Memento::Session.last.undoing.first
+          @result = Memento::Session.last.undo.first
           @object = @result.object
         end
         

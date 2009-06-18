@@ -28,7 +28,7 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
   
   it "should allow undoing the destruction" do
     Project.count.should be_zero
-    Memento::Session.last.undoing
+    Memento::Session.last.undo
     Project.count.should eql(1)
     Project.first.attributes_for_recording.reject{|k, v| k.to_sym == :id }.should == (
       @project.attributes_for_recording.reject{|k, v| k.to_sym == :id }
@@ -36,7 +36,7 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
   end
   
   it "should give back undone_object on undoing the destruction" do
-    Memento::Session.last.undoing.map{|e| e.object.class }.should eql([Project])
+    Memento::Session.last.undo.map{|e| e.object.class }.should eql([Project])
   end
   
   

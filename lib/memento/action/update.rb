@@ -4,7 +4,7 @@ class Memento::Action::Update < Memento::Action::Base
     record.changes_for_recording
   end
   
-  def undoing
+  def undo
     if !record
       was_destroyed
     elsif mergable?
@@ -38,13 +38,13 @@ class Memento::Action::Update < Memento::Action::Base
   
   def was_destroyed
     @state.new_object do |object|
-      object.errors.add(:memento_undoing, ActiveSupport::StringInquirer.new("was_destroyed"))
+      object.errors.add(:memento_undo, ActiveSupport::StringInquirer.new("was_destroyed"))
       object.id = @state.record_id
     end
   end
   
   def was_changed
-    record.errors.add(:memento_undoing, ActiveSupport::StringInquirer.new("was_destroyed"))
+    record.errors.add(:memento_undo, ActiveSupport::StringInquirer.new("was_destroyed"))
     record
   end
   

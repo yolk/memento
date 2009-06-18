@@ -2,7 +2,7 @@ class Memento::Action::Create < Memento::Action::Base
   
   def fetch;end
   
-  def undoing
+  def undo
     if record.nil?
       build_fake_object
     elsif record_was_changed?
@@ -29,7 +29,7 @@ class Memento::Action::Create < Memento::Action::Base
   end
   
   def was_changed
-    record.errors.add(:memento_undoing, ActiveSupport::StringInquirer.new("was_changed"))
+    record.errors.add(:memento_undo, ActiveSupport::StringInquirer.new("was_changed"))
     record
   end
   

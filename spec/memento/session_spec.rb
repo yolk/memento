@@ -22,7 +22,7 @@ describe Memento::Session do
     @session.states.count.should eql(1)
   end
   
-  describe "on undoing" do
+  describe "on undo" do
     before do
       @states = [@t1 = mock("t1"), @t2 = mock("t2")]
       @session.stub!(:states).and_return(@states)
@@ -30,66 +30,66 @@ describe Memento::Session do
     
     describe "and all states fail" do
       before do
-        @t1.stub!(:undoing).once().and_return(mock("r1", :success? => false))
-        @t2.stub!(:undoing).once().and_return(mock("r2", :success? => false))
+        @t1.stub!(:undo).once().and_return(mock("r1", :success? => false))
+        @t2.stub!(:undo).once().and_return(mock("r2", :success? => false))
         @states.stub!(:count).and_return(2)
       end
       
-      it "should call undoing on all states when undoing is called" do
-        @t1.should_receive(:undoing).once().and_return(mock("r1", :success? => false))
-        @t2.should_receive(:undoing).once().and_return(mock("r2", :success? => false))
-        @session.undoing
+      it "should call undo on all states when undo is called" do
+        @t1.should_receive(:undo).once().and_return(mock("r1", :success? => false))
+        @t2.should_receive(:undo).once().and_return(mock("r2", :success? => false))
+        @session.undo
       end
       
       it "should kepp itself" do
-        @session.undoing
+        @session.undo
         @session.reload
       end
     end
     
     describe "and all states succeed" do
       before do
-        @t1.stub!(:undoing).once().and_return(mock("r1", :success? => true, :state => @t1))
-        @t2.stub!(:undoing).once().and_return(mock("r2", :success? => true, :state => @t2))
+        @t1.stub!(:undo).once().and_return(mock("r1", :success? => true, :state => @t1))
+        @t2.stub!(:undo).once().and_return(mock("r2", :success? => true, :state => @t2))
         @t1.stub!(:destroy).once()
         @t2.stub!(:destroy).once()
         @states.stub!(:count).and_return(0)
       end
       
       it "should destroy itself" do
-        @session.undoing
+        @session.undo
         Memento::Session.find_by_id(@session.id).should be_nil
       end
       
       it "should destroy all states" do
         @t1.should_receive(:destroy).once()
         @t2.should_receive(:destroy).once()
-        @session.undoing
+        @session.undo
       end
     end
     
     describe "and some states succeed, some fail" do
       before do
-        @t1.stub!(:undoing).once().and_return(mock("r1", :success? => true, :state => @t1))
-        @t2.stub!(:undoing).once().and_return(mock("r2", :success? => false, :state => @t2))
+        @t1.stub!(:undo).once().and_return(mock("r1", :success? => true, :state => @t1))
+        @t2.stub!(:undo).once().and_return(mock("r2", :success? => false, :state => @t2))
         @t1.stub!(:destroy).once()
         @states.stub!(:count).and_return(1)
       end
       
       it "should kepp itself" do
-        @session.undoing
+        @session.undo
         @session.reload
       end
       
       it "should destroy only successful states" do
         @t1.should_receive(:destroy).once()
         @t2.should_receive(:destroy).never()
-        @session.undoing
+        @session.undo
       end
     end
   end
   
-  describe "on undoing!" do
+  describe "on undo!" do
     before do
       @state1 = @session.states.create!(:action_type => "update", :record => @p1 = Project.create!)
       Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create!)
@@ -98,16 +98,16 @@ describe Memento::Session do
     
     describe "and all states succeed" do
       it "should return ResultsArray" do
-        @session.undoing!.should be_a(Memento::ResultArray)
+        @session.undo!.should be_a(Memento::ResultArray)
       end
       
       it "should remove all states" do
-        @session.undoing!
+        @session.undo!
         Memento::State.count.should eql(1)
       end
       
       it "should remove itself" do
-        @session.undoing!
+        @session.undo!
         Memento::Session.find_by_id(@session.id).should be_nil
       end
     end
@@ -121,17 +121,17 @@ describe Memento::Session do
       end
       
       it "should keep all states" do
-        @session.undoing! rescue
+        @session.undo! rescue
         Memento::State.count.should eql(3)
       end
       
       it "should keep itself" do
-        @session.undoing! rescue
+        @session.undo! rescue
         @session.reload
       end
       
       it "should raise Memento::ErrorOnRewind" do
-        lambda{ @session.undoing! }.should raise_error(Memento::ErrorOnRewind)
+        lambda{ @session.undo! }.should raise_error(Memento::ErrorOnRewind)
       end
     end
     
@@ -142,17 +142,17 @@ describe Memento::Session do
       end
 
       it "should keep all states" do
-        @session.undoing! rescue nil
+        @session.undo! rescue nil
         Memento::State.count.should eql(3)
       end
 
       it "should keep itself" do
-        @session.undoing! rescue nil
+        @session.undo! rescue nil
         @session.reload
       end
       
       it "should raise Memento::ErrorOnRewind" do
-        lambda{ @session.undoing! }.should raise_error(Memento::ErrorOnRewind)
+        lambda{ @session.undo! }.should raise_error(Memento::ErrorOnRewind)
       end
     end
   end
