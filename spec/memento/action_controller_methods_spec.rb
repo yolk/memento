@@ -37,7 +37,7 @@ describe Memento::ActionControllerMethods do
   
   it "should set header X-MementoSessionId" do
     @controller.send(:memento) { Project.create!.update_attribute(:name, "P7") }
-    @headers.should == {'X-Memento-Session-Id' => Memento::Session.last.id }
+    @headers.should == {'X-Memento-Session-Id' => Memento::Session.last.id.to_s }
   end
   
   it "should return result of given block" do

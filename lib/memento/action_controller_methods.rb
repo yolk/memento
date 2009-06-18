@@ -9,7 +9,7 @@ class Memento
         block_result = yield
       end
       if memento_session && memento_session.id
-        response.headers["X-Memento-Session-Id"] = memento_session.id
+        response.headers["X-Memento-Session-Id"] = memento_session.id.to_s
       end
       block_result
     end
