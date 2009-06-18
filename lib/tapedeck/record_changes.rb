@@ -18,7 +18,7 @@ module Tapedeck::RecordChanges
         send :"after_#{action_type}", :"record_#{action_type}" unless callback_exists
       end
       
-      has_many :undo_snapshots, :as => :undoable
+      has_many :tapedeck_tracks, :class_name => "Tapedeck::Track", :as => :recorded_object
     end
   end
   

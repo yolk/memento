@@ -34,6 +34,6 @@ end
 
 require 'tapedeck/result'
 require 'tapedeck/action'
-require 'tapedeck/record_changes'
 require 'tapedeck/track'
 require 'tapedeck/session'
+require 'tapedeck/record_changes'
