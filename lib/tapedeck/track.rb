@@ -12,7 +12,7 @@ class Tapedeck::Track < ActiveRecord::Base
   before_create :set_recorded_data
   
   def rewind
-    action.rewind
+    Tapedeck::Result.new(action.rewind, self)
   end
   
   def recorded_data

@@ -10,11 +10,12 @@ class Tapedeck::Session < ActiveRecord::Base
   end
   
   def rewind
-    rewinded = tracks.map(&:rewind).inject(Tapedeck::ResultArray.new) do |array, entry|
-      array << Tapedeck::Result.new(entry)
+    tracks.map(&:rewind).inject(Tapedeck::ResultArray.new) do |results, result|
+      result.track.destroy if result.success?
+      results << result
     end
-    destroy
-    rewinded
+  ensure
+    destroy if tracks.count.zero?
   end
   
 end

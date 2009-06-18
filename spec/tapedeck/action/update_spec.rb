@@ -36,7 +36,7 @@ describe Tapedeck::Action::Update, "when object gets updated" do
   
   it "should allow rewinding/undoing the update" do
     rewinded = Tapedeck::Session.last.rewind.first
-    rewinded.should be_successful
+    rewinded.should be_success
     rewinded.object.should_not be_changed
     rewinded.object.name.should eql("P1")
     rewinded.object.customer.should be_nil
@@ -50,7 +50,7 @@ describe Tapedeck::Action::Update, "when object gets updated" do
     
     it "should return fake object with error" do
       rewinded = Tapedeck::Session.last.rewind.first
-      rewinded.should_not be_successful
+      rewinded.should_not be_success
       rewinded.error.should be_was_destroyed
       rewinded.object.class.should eql(Project)
       rewinded.object.id.should eql(1)
@@ -61,13 +61,13 @@ describe Tapedeck::Action::Update, "when object gets updated" do
     
     describe "with mergeable untracked changes" do
       before do
-        @project.update_attributes({:notes => "Only one bla!"})
+        @project.update_attributes({:notes => "Bla!"})
         @result = Tapedeck::Session.first.rewind.first
         @object = @result.object
       end
     
-      it "should be successful" do
-        @result.should be_successful
+      it "should be success" do
+        @result.should be_success
       end
     
       it "should return correctly updated object" do
@@ -75,22 +75,22 @@ describe Tapedeck::Action::Update, "when object gets updated" do
         @object.name.should eql("P1")
         @object.customer.should be_nil
         @object.closed_at.to_s.should eql(3.days.ago.to_s)
-        @object.notes.should eql("Only one bla!")
+        @object.notes.should eql("Bla!")
       end
     end
   
     describe "with mergeable tracked changes" do
       before do
         Tapedeck.instance.record(@user) do
-          @project.update_attributes({:notes => "Only one bla!"})
+          @project.update_attributes({:notes => "Bla!"})
         end
         Tapedeck::Track.last.update_attribute(:created_at, 1.minute.from_now)
         @result = Tapedeck::Session.first.rewind.first
         @object = @result.object
       end
     
-      it "should be successful" do
-        @result.should be_successful
+      it "should be success" do
+        @result.should be_success
       end
     
       it "should return correctly updated object" do
@@ -98,7 +98,7 @@ describe Tapedeck::Action::Update, "when object gets updated" do
         @object.name.should eql("P1")
         @object.customer.should be_nil
         @object.closed_at.to_s.should eql(3.days.ago.to_s)
-        @object.notes.should eql("Only one bla!")
+        @object.notes.should eql("Bla!")
       end
     
       describe "when second track is rewinded" do
@@ -107,8 +107,8 @@ describe Tapedeck::Action::Update, "when object gets updated" do
           @object = @result.object
         end
     
-        it "should be successful" do
-          @result.should be_successful
+        it "should be success" do
+          @result.should be_success
         end
 
         it "should return correctly updated object" do
@@ -159,6 +159,25 @@ describe Tapedeck::Action::Update, "when object gets updated" do
         @object.customer.should eql(@customer)
         @object.closed_at.to_s.should eql(2.days.ago.to_s)
         @object.should_not be_changed
+      end
+      
+      describe "when second track is rewinded" do
+        before do
+          @result = Tapedeck::Session.last.rewind.first
+          @object = @result.object
+        end
+        
+        it "should be success" do
+          @result.should be_success
+        end
+
+        it "should return correctly updated object" do
+          @object.class.should eql(Project)
+          @object.name.should eql("P2")
+          @object.customer.should eql(@customer)
+          @object.closed_at.to_s.should eql(2.days.ago.to_s)
+          @object.notes.should eql("Bla bla")
+        end
       end
     end
   end

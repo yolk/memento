@@ -8,7 +8,7 @@ class Tapedeck::ResultArray < Array
     self.any?{ |result| result.failed? }
   end
   
-  def successful?
+  def success?
     !failed?
   end
   
@@ -16,10 +16,10 @@ end
 
 class Tapedeck::Result
   
-  attr_reader :object
+  attr_reader :object, :track
   
-  def initialize(object)
-    @object = object
+  def initialize(object, track)
+    @object, @track = object, track
   end
   
   def error
@@ -30,7 +30,7 @@ class Tapedeck::Result
     !!error
   end
   
-  def successful?
+  def success?
     !failed?
   end
 end

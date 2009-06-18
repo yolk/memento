@@ -5,11 +5,16 @@ describe Tapedeck::Result do
   describe "when initalized with valid object" do
     before do
       @object = mock("object", :errors => {})
-      @result = Tapedeck::Result.new(@object)
+      @track = mock("track1")
+      @result = Tapedeck::Result.new(@object, @track)
     end
 
     it "should have an object attribute" do
       @result.object.should eql(@object)
+    end
+    
+    it "should have an track attribute" do
+      @result.track.should eql(@track)
     end
 
     it "should have an error attribute" do
@@ -17,7 +22,7 @@ describe Tapedeck::Result do
     end
 
     it "should be valid" do
-      @result.should be_successful
+      @result.should be_success
       @result.should_not be_failed
     end
   end
@@ -25,7 +30,7 @@ describe Tapedeck::Result do
   describe "when initalized with object with errors" do
     before do
       @object = mock("object", :errors => {:tapedeck_rewind => "123"})
-      @result = Tapedeck::Result.new(@object)
+      @result = Tapedeck::Result.new(@object, mock("track1"))
     end
     
     it "should have an object attribute" do
@@ -38,7 +43,7 @@ describe Tapedeck::Result do
 
     it "should be invalid" do
       @result.should be_failed
-      @result.should_not be_successful
+      @result.should_not be_success
     end
   end
 
@@ -55,15 +60,15 @@ describe Tapedeck::ResultArray do
   end
   
   it "should have no errors" do
-    @results.should be_successful
+    @results.should be_success
     @results.should_not be_failed
   end
   
   describe "when Tapedeck::Result without errors added" do
     before do
       @object = mock("object", :errors => {:tapedeck_rewind => "123"})
-      @results << Tapedeck::Result.new(mock("object2", :errors => {}))
-      @results << (@with_error = Tapedeck::Result.new(@object))
+      @results << Tapedeck::Result.new(mock("object2", :errors => {}), mock("track1"))
+      @results << (@with_error = Tapedeck::Result.new(@object, mock("track2")))
     end
     
     it "should have two entrys" do
@@ -76,7 +81,7 @@ describe Tapedeck::ResultArray do
     end
     
     it "should have an error" do
-      @results.should_not be_successful
+      @results.should_not be_success
       @results.should be_failed
     end
   end

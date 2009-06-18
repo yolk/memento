@@ -39,7 +39,7 @@ describe Tapedeck::Action::Create, "when object is created" do
       Project.last.update_attribute(:created_at, 1.minute.ago)
       rewinded = Tapedeck::Session.last.rewind
       Project.count.should eql(1)
-      rewinded.first.should_not be_successful
+      rewinded.first.should_not be_success
       rewinded.first.error.should be_was_changed
     end
     

@@ -36,6 +36,13 @@ describe Tapedeck::Track do
       @track = @session.tracks.create!(:action_type => "destroy", :recorded_object => @project = Project.create(:name => "A") )
     end
     
+    it "should give back Tapedeck::Result on rewind" do
+      result = @track.rewind
+      result.should be_a(Tapedeck::Result)
+      result.object.should be_a(Project)
+      result.track.should eql(@track)
+    end
+    
     it "should give back old data on recorded_data" do
       @track.recorded_data.should == (@project.attributes_for_recording)
     end
