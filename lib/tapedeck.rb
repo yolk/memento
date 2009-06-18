@@ -1,6 +1,8 @@
 class Tapedeck
   include Singleton
   
+  class ErrorOnRewind < StandardError;end
+  
   def record(user)
     start(user)
     yield

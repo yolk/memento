@@ -18,4 +18,12 @@ class Tapedeck::Session < ActiveRecord::Base
     destroy if tracks.count.zero?
   end
   
+  def rewind!
+    transaction do
+      returning(rewind) do |results|
+        raise Tapedeck::ErrorOnRewind if results.failed?
+      end
+    end
+  end
+  
 end

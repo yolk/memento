@@ -22,44 +22,139 @@ describe Tapedeck::Session do
     @session.tracks.count.should eql(1)
   end
   
-  it "should call rewind on all tracks when rewind is called" do
-    tracks = [t1 = mock("t1"), t2 = mock("t2")]
-    @session.stub!(:tracks).and_return(tracks)
-    tracks.stub!(:count).and_return(0)
-    t1.should_receive(:rewind).once().and_return(mock("r1", :success? => false))
-    t2.should_receive(:rewind).once().and_return(mock("r2", :success? => false))
-    @session.rewind
+  describe "on rewind" do
+    before do
+      @tracks = [@t1 = mock("t1"), @t2 = mock("t2")]
+      @session.stub!(:tracks).and_return(@tracks)
+    end
+    
+    describe "and all tracks fail" do
+      before do
+        @t1.stub!(:rewind).once().and_return(mock("r1", :success? => false))
+        @t2.stub!(:rewind).once().and_return(mock("r2", :success? => false))
+        @tracks.stub!(:count).and_return(2)
+      end
+      
+      it "should call rewind on all tracks when rewind is called" do
+        @t1.should_receive(:rewind).once().and_return(mock("r1", :success? => false))
+        @t2.should_receive(:rewind).once().and_return(mock("r2", :success? => false))
+        @session.rewind
+      end
+      
+      it "should kepp itself" do
+        @session.rewind
+        @session.reload
+      end
+    end
+    
+    describe "and all tracks succeed" do
+      before do
+        @t1.stub!(:rewind).once().and_return(mock("r1", :success? => true, :track => @t1))
+        @t2.stub!(:rewind).once().and_return(mock("r2", :success? => true, :track => @t2))
+        @t1.stub!(:destroy).once()
+        @t2.stub!(:destroy).once()
+        @tracks.stub!(:count).and_return(0)
+      end
+      
+      it "should destroy itself" do
+        @session.rewind
+        Tapedeck::Session.find_by_id(@session.id).should be_nil
+      end
+      
+      it "should destroy all tracks" do
+        @t1.should_receive(:destroy).once()
+        @t2.should_receive(:destroy).once()
+        @session.rewind
+      end
+    end
+    
+    describe "and some tracks succeed, some fail" do
+      before do
+        @t1.stub!(:rewind).once().and_return(mock("r1", :success? => true, :track => @t1))
+        @t2.stub!(:rewind).once().and_return(mock("r2", :success? => false, :track => @t2))
+        @t1.stub!(:destroy).once()
+        @tracks.stub!(:count).and_return(1)
+      end
+      
+      it "should kepp itself" do
+        @session.rewind
+        @session.reload
+      end
+      
+      it "should destroy only successful tracks" do
+        @t1.should_receive(:destroy).once()
+        @t2.should_receive(:destroy).never()
+        @session.rewind
+      end
+    end
   end
   
-  it "should destroy all successful rewinded tracks and keep failed" do
-    tracks = [t1 = mock("t1"), t2 = mock("t2")]
-    @session.stub!(:tracks).and_return(tracks)
-    tracks.stub!(:count).and_return(0)
-    t1.should_receive(:rewind).once().and_return(r1 = mock("r1", :success? => true, :track => t1))
-    t1.should_receive(:destroy).once().and_return(true)
-    t2.should_receive(:rewind).once().and_return(mock("r2", :success? => false))
-    @session.rewind
-  end
-  
-  it "should kepp itself if any track failed" do
-    tracks = []
-    @session.stub!(:tracks).and_return(tracks)
-    tracks.stub!(:count).and_return(1) # 1 keept (failed)
-    @session.rewind
-    @session.reload
-  end
-  
-  it "should destroy itself if all tracks successful" do
-    tracks = []
-    @session.stub!(:tracks).and_return(tracks)
-    tracks.stub!(:count).and_return(0) # 0 keept (failed)
-    @session.rewind
-    Tapedeck::Session.find_by_id(@session.id).should be_nil
-  end
-  
-  it "should destroy itself after rewinding " do
-    @session.rewind
-    Tapedeck::Session.find_by_id(@session.id).should be_nil
+  describe "on rewind!" do
+    before do
+      @track1 = @session.tracks.create!(:action_type => "update", :recorded_object => @p1 = Project.create!)
+      Tapedeck::Session.create!(:user => @user).tracks.create!(:action_type => "destroy", :recorded_object => Project.create!)
+      @track2 = @session.tracks.create!(:action_type => "update", :recorded_object => @p2 = Project.create!)
+    end
+    
+    describe "and all tracks succeed" do
+      it "should return ResultsArray" do
+        @session.rewind!.should be_a(Tapedeck::ResultArray)
+      end
+      
+      it "should remove all tracks" do
+        @session.rewind!
+        Tapedeck::Track.count.should eql(1)
+      end
+      
+      it "should remove itself" do
+        @session.rewind!
+        Tapedeck::Session.find_by_id(@session.id).should be_nil
+      end
+    end
+    
+    describe "and all tracks fail" do
+      before do
+        @track1.update_attribute(:recorded_data, {:name => ["A", "B"]})
+        @p1.update_attribute(:name, "C")
+        @track2.update_attribute(:recorded_data, {:name => ["A", "B"]})
+        @p2.update_attribute(:name, "C")
+      end
+      
+      it "should keep all tracks" do
+        @session.rewind! rescue
+        Tapedeck::Track.count.should eql(3)
+      end
+      
+      it "should keep itself" do
+        @session.rewind! rescue
+        @session.reload
+      end
+      
+      it "should raise Tapedeck::ErrorOnRewind" do
+        lambda{ @session.rewind! }.should raise_error(Tapedeck::ErrorOnRewind)
+      end
+    end
+    
+    describe "and some tracks succeed, some fail" do
+      before do
+        @track1.update_attribute(:recorded_data, {:name => ["A", "B"]})
+        @p1.update_attribute(:name, "C")
+      end
+
+      it "should keep all tracks" do
+        @session.rewind! rescue nil
+        Tapedeck::Track.count.should eql(3)
+      end
+
+      it "should keep itself" do
+        @session.rewind! rescue nil
+        @session.reload
+      end
+      
+      it "should raise Tapedeck::ErrorOnRewind" do
+        lambda{ @session.rewind! }.should raise_error(Tapedeck::ErrorOnRewind)
+      end
+    end
   end
   
   describe "with tracks" do
@@ -73,46 +168,6 @@ describe Tapedeck::Session do
       Tapedeck::Track.count.should eql(3)
       @session.destroy
       Tapedeck::Track.count.should eql(1)
-    end
-    
-    describe "on rewind" do
-      before do
-        @results = @session.rewind
-      end
-      
-      it "should destroy all tracks and session" do
-        Tapedeck::Track.count.should eql(1)
-        Tapedeck::Session.find_by_id(@session.id).should be_nil
-      end
-
-      it "should return an Tapedeck::ResultArray containing Tapedeck::Result instances" do
-        @results.class.should eql(Tapedeck::ResultArray)
-        @results.map(&:class).uniq.should eql([Tapedeck::Result])
-        @results.size.should eql(2)
-        @results.should be_success
-      end
-    end
-    
-    describe "on partial failed rewind" do
-      before do
-        @track2.update_attribute(:recorded_data, {:name => ["1", "2"]})
-        @track2.recorded_object.update_attribute(:name, "3")
-        @results = @session.rewind
-      end
-      
-      it "should return all results" do
-        @results.size.should eql(2)
-      end
-      
-      it "should return one failed result" do
-        @results.errors.size.should eql(1)
-      end
-      
-      it "should destroy only succesful tracks and keep session" do
-        Tapedeck::Track.count.should eql(2)
-        @session.reload.tracks.count.should eql(1)
-        @session.reload.tracks.first.should eql(@track2)
-      end
     end
     
   end
