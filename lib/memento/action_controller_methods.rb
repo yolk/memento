@@ -5,9 +5,12 @@ class Memento
     
     def memento
       block_result = nil
-      response.headers["X-MementoSessionId"] = Memento.instance.memento(current_user) do
+      memento_session = Memento.instance.memento(current_user) do
         block_result = yield
-      end.id
+      end
+      if memento_session && memento_session.id
+        response.headers["X-Memento-Session-Id"] = memento_session.id
+      end
       block_result
     end
   end

@@ -37,13 +37,19 @@ describe Memento::ActionControllerMethods do
   
   it "should set header X-MementoSessionId" do
     @controller.send(:memento) { Project.create!.update_attribute(:name, "P7") }
-    @headers.should == {'X-MementoSessionId' => Memento::Session.last.id }
+    @headers.should == {'X-Memento-Session-Id' => Memento::Session.last.id }
   end
   
   it "should return result of given block" do
     @controller.send(:memento) do
       1 + 2
     end.should eql(3)
+  end
+  
+  it "should not set header when no session stored" do
+    @controller.send(:memento) { Customer.create! } # not stored
+    @headers['X-MementoSessionId'].should be_nil
+    @headers.should_not have_key('X-Memento-Session-Id')
   end
   
 end
