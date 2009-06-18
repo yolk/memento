@@ -6,7 +6,7 @@ class FooController < ActionController::Base
   
 end
 
-describe Memento::RecordInController do
+describe Memento::ActionControllerMethods do
   
   before do
     setup_db

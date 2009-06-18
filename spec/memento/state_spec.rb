@@ -44,7 +44,7 @@ describe Memento::State do
     end
     
     it "should give back old data on record_data" do
-      @state.record_data.should == (@project.attributes_for_recording)
+      @state.record_data.should == (@project.attributes_for_memento)
     end
     
     it "should give back new unsaved copy of object on new_object" do

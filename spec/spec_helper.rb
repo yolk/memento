@@ -78,5 +78,5 @@ end
 class Project < ActiveRecord::Base
   belongs_to :customer
   
-  record_changes
+  memento_changes
 end

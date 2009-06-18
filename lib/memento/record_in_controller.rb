@@ -1,5 +1,5 @@
 class Memento
-  module RecordInController
+  module ActionControllerMethods
     
     private
     
@@ -13,4 +13,4 @@ class Memento
   end
 end
 
-ActionController::Base.send(:include, Memento::RecordInController) if defined?(ActionController::Base)
+ActionController::Base.send(:include, Memento::ActionControllerMethods) if defined?(ActionController::Base)

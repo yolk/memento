@@ -15,7 +15,7 @@ describe Memento::Action::Update, "when object gets updated" do
     shutdown_db
   end
     
-  it "should create memento_state for ar-object from changes_for_recording" do
+  it "should create memento_state for ar-object from changes_for_memento" do
     Memento::State.count.should eql(1)
     Memento::State.first.action_type.should eql("update")
     Memento::State.first.record.should eql(@project)

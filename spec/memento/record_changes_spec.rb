@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
-describe Memento::RecordChanges do
+describe Memento::ActiveRecordMethods do
   
   before do
     setup_db
@@ -29,19 +29,19 @@ describe Memento::RecordChanges do
     project.destroy
   end
   
-  it "should define attributes_for_recording and ignore attributes" do
-    Project.create!(:name => "Project X").attributes_for_recording.should == {
+  it "should define attributes_for_memento and ignore attributes" do
+    Project.create!(:name => "Project X").attributes_for_memento.should == {
       "id"=>1, "name"=>"Project X", "notes"=>nil, "customer_id"=>nil, "closed_at"=>nil
     }
   end
   
-  it "should define changes_for_recording and ignore attributes" do
+  it "should define changes_for_memento and ignore attributes" do
     project = Project.create!(:name => "Project X")
     project.name = "A Project"
     project.updated_at = 5.minutes.ago
     project.notes = "new"
-    project.changes_for_recording.should_not == project.changes
-    project.changes_for_recording.should == {"name"=>["Project X", "A Project"], "notes"=>[nil, "new"]}
+    project.changes_for_memento.should_not == project.changes
+    project.changes_for_memento.should == {"name"=>["Project X", "A Project"], "notes"=>[nil, "new"]}
   end
   
   it "should define has_many association to memento_states" do

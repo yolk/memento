@@ -1,4 +1,4 @@
-module Memento::RecordChanges
+module Memento::ActiveRecordMethods
   
   IGNORE_ATTRIBUTES = [:updated_at, :created_at]
   
@@ -8,7 +8,7 @@ module Memento::RecordChanges
   
   module ClassMethods
     
-    def record_changes(action_type_types=Memento::Action::Base.action_types)
+    def memento_changes(action_type_types=Memento::Action::Base.action_types)
       include InstanceMethods
       
       action_type_types.each do |action_type|
@@ -24,12 +24,12 @@ module Memento::RecordChanges
   
   module InstanceMethods
     
-    def attributes_for_recording
-      attributes.delete_if{|key, value| Memento::RecordChanges::IGNORE_ATTRIBUTES.include?(key.to_sym) }
+    def attributes_for_memento
+      attributes.delete_if{|key, value| Memento::ActiveRecordMethods::IGNORE_ATTRIBUTES.include?(key.to_sym) }
     end
     
-    def changes_for_recording
-      changes.delete_if{|key, value| Memento::RecordChanges::IGNORE_ATTRIBUTES.include?(key.to_sym) }
+    def changes_for_memento
+      changes.delete_if{|key, value| Memento::ActiveRecordMethods::IGNORE_ATTRIBUTES.include?(key.to_sym) }
     end
     
     private
@@ -43,4 +43,4 @@ module Memento::RecordChanges
   
 end
 
-ActiveRecord::Base.send(:include, Memento::RecordChanges) if defined?(ActiveRecord::Base)
+ActiveRecord::Base.send(:include, Memento::ActiveRecordMethods) if defined?(ActiveRecord::Base)

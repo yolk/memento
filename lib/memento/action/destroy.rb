@@ -1,7 +1,7 @@
 class Memento::Action::Destroy < Memento::Action::Base
   
   def fetch
-    record.attributes_for_recording
+    record.attributes_for_memento
   end
   
   def undo

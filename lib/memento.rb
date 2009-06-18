@@ -38,7 +38,7 @@ end
 
 require 'memento/result'
 require 'memento/action'
-require 'memento/record_changes'
-require 'memento/record_in_controller'
+require 'memento/active_record_methods'
+require 'memento/action_controller_methods'
 require 'memento/state'
 require 'memento/session'
