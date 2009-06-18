@@ -34,13 +34,13 @@ describe Memento::Action::Update, "when object gets updated" do
     Project.count.should eql(1)
   end
   
-  it "should allow rewinding/undoing the update" do
-    rewinded = Memento::Session.last.rewind.first
-    rewinded.should be_success
-    rewinded.object.should_not be_changed
-    rewinded.object.name.should eql("P1")
-    rewinded.object.customer.should be_nil
-    rewinded.object.closed_at.to_s.should eql(3.days.ago.to_s)
+  it "should allow undoing the update" do
+    undone = Memento::Session.last.undoing.first
+    undone.should be_success
+    undone.object.should_not be_changed
+    undone.object.name.should eql("P1")
+    undone.object.customer.should be_nil
+    undone.object.closed_at.to_s.should eql(3.days.ago.to_s)
   end
   
   describe "when record was destroyed before undo" do
@@ -49,11 +49,11 @@ describe Memento::Action::Update, "when object gets updated" do
     end
     
     it "should return fake object with error" do
-      rewinded = Memento::Session.last.rewind.first
-      rewinded.should_not be_success
-      rewinded.error.should be_was_destroyed
-      rewinded.object.class.should eql(Project)
-      rewinded.object.id.should eql(1)
+      undone = Memento::Session.last.undoing.first
+      undone.should_not be_success
+      undone.error.should be_was_destroyed
+      undone.object.class.should eql(Project)
+      undone.object.id.should eql(1)
     end
   end
   
@@ -62,7 +62,7 @@ describe Memento::Action::Update, "when object gets updated" do
     describe "with mergeable unstateed changes" do
       before do
         @project.update_attributes({:notes => "Bla!"})
-        @result = Memento::Session.first.rewind.first
+        @result = Memento::Session.first.undoing.first
         @object = @result.object
       end
     
@@ -85,7 +85,7 @@ describe Memento::Action::Update, "when object gets updated" do
           @project.update_attributes({:notes => "Bla!"})
         end
         Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
-        @result = Memento::Session.first.rewind.first
+        @result = Memento::Session.first.undoing.first
         @object = @result.object
       end
     
@@ -101,9 +101,9 @@ describe Memento::Action::Update, "when object gets updated" do
         @object.notes.should eql("Bla!")
       end
     
-      describe "when second state is rewinded" do
+      describe "when second state is undone" do
         before do
-          @result = Memento::Session.first.rewind.first
+          @result = Memento::Session.first.undoing.first
           @object = @result.object
         end
     
@@ -124,7 +124,7 @@ describe Memento::Action::Update, "when object gets updated" do
     describe "with unmergeable unstateed changes" do
       before do
         @project.update_attributes({:name => "P3"})
-        @result = Memento::Session.last.rewind.first
+        @result = Memento::Session.last.undoing.first
         @object = @result.object
       end
 
@@ -132,7 +132,7 @@ describe Memento::Action::Update, "when object gets updated" do
         @result.should be_failed
       end
     
-      it "should return not rewinded object" do
+      it "should return not undone object" do
         @object.name.should eql("P3")
         @object.customer.should eql(@customer)
         @object.closed_at.to_s.should eql(2.days.ago.to_s)
@@ -146,7 +146,7 @@ describe Memento::Action::Update, "when object gets updated" do
           @project.update_attributes!({:name => "P3"})
         end
         Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
-        @result = Memento::Session.first.rewind.first
+        @result = Memento::Session.first.undoing.first
         @object = @result.object
       end
     
@@ -154,16 +154,16 @@ describe Memento::Action::Update, "when object gets updated" do
         @result.should be_failed
       end
     
-      it "should return not rewinded object" do
+      it "should return not undone object" do
         @object.name.should eql("P3")
         @object.customer.should eql(@customer)
         @object.closed_at.to_s.should eql(2.days.ago.to_s)
         @object.should_not be_changed
       end
       
-      describe "when second state is rewinded" do
+      describe "when second state is undone" do
         before do
-          @result = Memento::Session.last.rewind.first
+          @result = Memento::Session.last.undoing.first
           @object = @result.object
         end
         

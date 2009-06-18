@@ -26,17 +26,17 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
     Project.count.should be_zero
   end
   
-  it "should allow rewinding/undoing the destruction" do
+  it "should allow undoing the destruction" do
     Project.count.should be_zero
-    Memento::Session.last.rewind
+    Memento::Session.last.undoing
     Project.count.should eql(1)
     Project.first.attributes_for_recording.reject{|k, v| k.to_sym == :id }.should == (
       @project.attributes_for_recording.reject{|k, v| k.to_sym == :id }
     )
   end
   
-  it "should give back rewinded_object on rewinding/undoing the destruction" do
-    Memento::Session.last.rewind.map{|e| e.object.class }.should eql([Project])
+  it "should give back undone_object on undoing the destruction" do
+    Memento::Session.last.undoing.map{|e| e.object.class }.should eql([Project])
   end
   
   

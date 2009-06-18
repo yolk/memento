@@ -9,8 +9,8 @@ class Memento::Session < ActiveRecord::Base
     states.create(:action_type => action_type.to_s, :record => record)
   end
   
-  def rewind
-    states.map(&:rewind).inject(Memento::ResultArray.new) do |results, result|
+  def undoing
+    states.map(&:undoing).inject(Memento::ResultArray.new) do |results, result|
       result.state.destroy if result.success?
       results << result
     end
@@ -18,9 +18,9 @@ class Memento::Session < ActiveRecord::Base
     destroy if states.count.zero?
   end
   
-  def rewind!
+  def undoing!
     transaction do
-      returning(rewind) do |results|
+      returning(undoing) do |results|
         raise Memento::ErrorOnRewind if results.failed?
       end
     end

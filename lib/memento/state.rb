@@ -11,8 +11,8 @@ class Memento::State < ActiveRecord::Base
   
   before_create :set_record_data
   
-  def rewind
-    Memento::Result.new(action.rewind, self)
+  def undoing
+    Memento::Result.new(action.undoing, self)
   end
   
   def record_data
