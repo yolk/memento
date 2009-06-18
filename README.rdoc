@@ -1,7 +1,7 @@
-= undo
+= tapedeck
 
 Description goes here.
 
 == Copyright
 
-Copyright (c) 2009 Sebastian. See LICENSE for details.
+Copyright (c) 2009 Sebastian Munz. See LICENSE for details.
