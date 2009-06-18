@@ -21,19 +21,19 @@ describe Memento::State do
     Memento::State.create(:action_type => "move").errors[:action_type].should eql("is not included in the list")
   end
   
-  it "should belong to polymorphic recorded_object" do
-    Memento::State.new(:recorded_object => @user).recorded_object.should eql(@user)
-    Memento::State.new(:recorded_object => @session).recorded_object.should eql(@session)
+  it "should belong to polymorphic record" do
+    Memento::State.new(:record => @user).record.should eql(@user)
+    Memento::State.new(:record => @session).record.should eql(@session)
   end
   
-  it "should require recorded_object" do
-    Memento::State.create.errors[:recorded_object].should eql("can't be blank")
+  it "should require record" do
+    Memento::State.create.errors[:record].should eql("can't be blank")
   end
   
   
   describe "valid State" do
     before do
-      @state = @session.states.create!(:action_type => "destroy", :recorded_object => @project = Project.create(:name => "A") )
+      @state = @session.states.create!(:action_type => "destroy", :record => @project = Project.create(:name => "A") )
     end
     
     it "should give back Memento::Result on rewind" do
@@ -43,8 +43,8 @@ describe Memento::State do
       result.state.should eql(@state)
     end
     
-    it "should give back old data on recorded_data" do
-      @state.recorded_data.should == (@project.attributes_for_recording)
+    it "should give back old data on record_data" do
+      @state.record_data.should == (@project.attributes_for_recording)
     end
     
     it "should give back new unsaved copy of object on new_object" do
@@ -65,32 +65,32 @@ describe Memento::State do
       end.name.should eql("B")
     end
     
-    describe "on later_states_on_recorded_object_for" do
+    describe "on later_states_on_record_for" do
       
       it "should return empty array" do
-        @state.later_states_on_recorded_object_for("destroy").should eql([])
+        @state.later_states_on_record_for("destroy").should eql([])
       end
 
       it "should return filled array when other record of the given action_type exists" do
-        Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :recorded_object => @project )
-        @state.later_states_on_recorded_object_for("destroy").map(&:class).should eql([Memento::State])
-        @state.later_states_on_recorded_object_for(:"destroy").map(&:id).should eql([2])
+        Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => @project )
+        @state.later_states_on_record_for("destroy").map(&:class).should eql([Memento::State])
+        @state.later_states_on_record_for(:"destroy").map(&:id).should eql([2])
       end
       
       it "should return empty array when only records of another action_type exists" do
-        Memento::Session.create!(:user => @user).states.create!(:action_type => "update", :recorded_object => @project )
-        @state.later_states_on_recorded_object_for("destroy").should eql([])
+        Memento::Session.create!(:user => @user).states.create!(:action_type => "update", :record => @project )
+        @state.later_states_on_record_for("destroy").should eql([])
       end
       
-      it "should return empty array when only destroy records of another recorded_object exists" do
-        Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :recorded_object => Project.create(:name => "B") )
-        @state.later_states_on_recorded_object_for("destroy").should eql([])
+      it "should return empty array when only destroy records of another record exists" do
+        Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create(:name => "B") )
+        @state.later_states_on_record_for("destroy").should eql([])
       end
       
       it "should return empty array when only destroy records older than @tack exist" do
-        state2 = Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :recorded_object => @project )
+        state2 = Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => @project )
         state2.update_attribute(:created_at, 3.minutes.ago)
-        @state.later_states_on_recorded_object_for("destroy").should eql([])
+        @state.later_states_on_record_for("destroy").should eql([])
       end
     end
     

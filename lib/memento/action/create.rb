@@ -3,39 +3,39 @@ class Memento::Action::Create < Memento::Action::Base
   def record;end
   
   def rewind
-    if recorded_object.nil?
+    if record.nil?
       build_fake_object
-    elsif recorded_object_was_changed?
+    elsif record_was_changed?
       was_changed
     else
-      destroy_recorded_object
+      destroy_record
     end
   end
   
   private
   
-  def recorded_object_was_changed?
-    recorded_object.updated_at > recorded_object.created_at
+  def record_was_changed?
+    record.updated_at > record.created_at
   end
   
   def build_fake_object
-    if destroy_state = @state.later_states_on_recorded_object_for(:destroy).last
+    if destroy_state = @state.later_states_on_record_for(:destroy).last
       destroy_state.rebuild_object
     else
       @state.new_object do |object|
-        object.id = @state.recorded_object_id
+        object.id = @state.record_id
       end
     end
   end
   
   def was_changed
-    recorded_object.errors.add(:memento_rewind, ActiveSupport::StringInquirer.new("was_changed"))
-    recorded_object
+    record.errors.add(:memento_rewind, ActiveSupport::StringInquirer.new("was_changed"))
+    record
   end
   
-  def destroy_recorded_object
-    recorded_object.destroy
-    recorded_object
+  def destroy_record
+    record.destroy
+    record
   end
   
 end

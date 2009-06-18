@@ -20,9 +20,9 @@ class Memento
     @session = nil
   end
   
-  def add_state(action_type, recorded_object)
+  def add_state(action_type, record)
     return unless save_session
-    @session.add_state(action_type, recorded_object)
+    @session.add_state(action_type, record)
   end
   
   def recording?

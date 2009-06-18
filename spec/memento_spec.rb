@@ -117,7 +117,7 @@ describe Memento do
       Memento.instance.add_state :destroy, @project
       Memento::State.count.should eql(1)
       Memento::State.first.action_type.should eql("destroy")
-      Memento::State.first.recorded_object.should eql(Project.last)
+      Memento::State.first.record.should eql(Project.last)
     end
     
     it "should save session on first added state" do

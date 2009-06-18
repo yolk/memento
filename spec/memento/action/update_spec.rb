@@ -18,12 +18,12 @@ describe Memento::Action::Update, "when object gets updated" do
   it "should create memento_state for ar-object from changes_for_recording" do
     Memento::State.count.should eql(1)
     Memento::State.first.action_type.should eql("update")
-    Memento::State.first.recorded_object.should eql(@project)
-    Memento::State.first.recorded_data.keys.sort.should eql(%w(name closed_at customer_id).sort)
-    Memento::State.first.recorded_data["name"].should eql(["P1", "P2"])
-    Memento::State.first.recorded_data["customer_id"].should eql([nil, @customer.id])
-    Memento::State.first.recorded_data["closed_at"][0].utc.to_s.should eql(3.days.ago.utc.to_s)
-    Memento::State.first.recorded_data["closed_at"][1].utc.to_s.should eql(2.days.ago.utc.to_s)
+    Memento::State.first.record.should eql(@project)
+    Memento::State.first.record_data.keys.sort.should eql(%w(name closed_at customer_id).sort)
+    Memento::State.first.record_data["name"].should eql(["P1", "P2"])
+    Memento::State.first.record_data["customer_id"].should eql([nil, @customer.id])
+    Memento::State.first.record_data["closed_at"][0].utc.to_s.should eql(3.days.ago.utc.to_s)
+    Memento::State.first.record_data["closed_at"][1].utc.to_s.should eql(2.days.ago.utc.to_s)
   end
   
   it "should update object" do
@@ -43,7 +43,7 @@ describe Memento::Action::Update, "when object gets updated" do
     rewinded.object.closed_at.to_s.should eql(3.days.ago.to_s)
   end
   
-  describe "when recorded_object was destroyed before undo" do
+  describe "when record was destroyed before undo" do
     before do
       @project.destroy
     end
@@ -57,7 +57,7 @@ describe Memento::Action::Update, "when object gets updated" do
     end
   end
   
-  describe "when recorded_object was changed before undo" do
+  describe "when record was changed before undo" do
     
     describe "with mergeable unstateed changes" do
       before do

@@ -5,8 +5,8 @@ class Memento::Session < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :user
   
-  def add_state(action_type, recorded_object)
-    states.create(:action_type => action_type.to_s, :recorded_object => recorded_object)
+  def add_state(action_type, record)
+    states.create(:action_type => action_type.to_s, :record => record)
   end
   
   def rewind

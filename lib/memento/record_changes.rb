@@ -18,7 +18,7 @@ module Memento::RecordChanges
         send :"after_#{action_type}", :"record_#{action_type}" unless callback_exists
       end
       
-      has_many :memento_states, :class_name => "Memento::State", :as => :recorded_object
+      has_many :memento_states, :class_name => "Memento::State", :as => :record
     end
   end
   

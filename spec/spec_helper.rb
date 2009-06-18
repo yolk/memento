@@ -49,8 +49,8 @@ def setup_db
     
     create_table :memento_states do |t|
       t.string :action_type
-      t.binary :recorded_data, :limit => 1.megabytes
-      t.references :recorded_object, :polymorphic => true
+      t.binary :record_data, :limit => 1.megabytes
+      t.references :record, :polymorphic => true
       t.references :session
       t.timestamps
     end

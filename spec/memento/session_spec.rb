@@ -18,7 +18,7 @@ describe Memento::Session do
   
   it "should have_many states" do
     @session.states.should eql([])
-    @session.states.create!(:action_type => "destroy", :recorded_object => Project.create!)
+    @session.states.create!(:action_type => "destroy", :record => Project.create!)
     @session.states.count.should eql(1)
   end
   
@@ -91,9 +91,9 @@ describe Memento::Session do
   
   describe "on rewind!" do
     before do
-      @state1 = @session.states.create!(:action_type => "update", :recorded_object => @p1 = Project.create!)
-      Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :recorded_object => Project.create!)
-      @state2 = @session.states.create!(:action_type => "update", :recorded_object => @p2 = Project.create!)
+      @state1 = @session.states.create!(:action_type => "update", :record => @p1 = Project.create!)
+      Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create!)
+      @state2 = @session.states.create!(:action_type => "update", :record => @p2 = Project.create!)
     end
     
     describe "and all states succeed" do
@@ -114,9 +114,9 @@ describe Memento::Session do
     
     describe "and all states fail" do
       before do
-        @state1.update_attribute(:recorded_data, {:name => ["A", "B"]})
+        @state1.update_attribute(:record_data, {:name => ["A", "B"]})
         @p1.update_attribute(:name, "C")
-        @state2.update_attribute(:recorded_data, {:name => ["A", "B"]})
+        @state2.update_attribute(:record_data, {:name => ["A", "B"]})
         @p2.update_attribute(:name, "C")
       end
       
@@ -137,7 +137,7 @@ describe Memento::Session do
     
     describe "and some states succeed, some fail" do
       before do
-        @state1.update_attribute(:recorded_data, {:name => ["A", "B"]})
+        @state1.update_attribute(:record_data, {:name => ["A", "B"]})
         @p1.update_attribute(:name, "C")
       end
 
@@ -159,9 +159,9 @@ describe Memento::Session do
   
   describe "with states" do
     before do
-      @session.states.create!(:action_type => "destroy", :recorded_object => Project.create!)
-      Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :recorded_object => Project.create!)
-      @state2 = @session.states.create!(:action_type => "update", :recorded_object => Project.create!)
+      @session.states.create!(:action_type => "destroy", :record => Project.create!)
+      Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create!)
+      @state2 = @session.states.create!(:action_type => "update", :record => Project.create!)
     end
     
     it "should destroy all states when destroyed" do

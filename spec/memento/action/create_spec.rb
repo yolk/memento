@@ -16,8 +16,8 @@ describe Memento::Action::Create, "when object is created" do
   it "should create memento_state for ar-object with no data" do
     Memento::State.count.should eql(1)
     Memento::State.first.action_type.should eql("create")
-    Memento::State.first.recorded_object.should eql(@project) # it was destroyed, remember?
-    Memento::State.first.reload.recorded_data.should eql(nil)
+    Memento::State.first.record.should eql(@project) # it was destroyed, remember?
+    Memento::State.first.reload.record_data.should eql(nil)
   end
   
   it "should create object" do
@@ -43,7 +43,7 @@ describe Memento::Action::Create, "when object is created" do
       rewinded.first.error.should be_was_changed
     end
     
-    describe "when recorded_object was already destroyed" do
+    describe "when record was already destroyed" do
       
       it "should give back fake unsaved record with id set" do
         Project.last.destroy

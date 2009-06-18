@@ -17,8 +17,8 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
   it "should create memento_state for ar-object with full attributes_for_recording" do
     Memento::State.count.should eql(1)
     Memento::State.first.action_type.should eql("destroy")
-    Memento::State.first.recorded_object.should be_nil # it was destroyed, remember?
-    Memento::State.first.reload.recorded_data.should == @project.attributes_for_recording
+    Memento::State.first.record.should be_nil # it was destroyed, remember?
+    Memento::State.first.reload.record_data.should == @project.attributes_for_recording
   end
   
   it "should destroy object" do

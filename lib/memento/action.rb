@@ -5,12 +5,12 @@ module Memento::Action
       @state = state
     end
     
-    def recorded_object
-      @state.recorded_object
+    def record
+      @state.record
     end
     
-    def recorded_data
-      @state.recorded_data
+    def record_data
+      @state.record_data
     end
     
     def self.inherited(child)
