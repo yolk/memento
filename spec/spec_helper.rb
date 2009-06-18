@@ -11,7 +11,7 @@ ActiveRecord::Base.default_timezone = :utc
 
 $:.unshift(File.dirname(__FILE__))
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'tapedeck'
+require 'memento'
 
 Spec::Runner.configure do |config|
   
@@ -42,12 +42,12 @@ def setup_db
       t.timestamps
     end
     
-    create_table :tapedeck_sessions do |t|
+    create_table :memento_sessions do |t|
       t.references :user
       t.timestamps
     end
     
-    create_table :tapedeck_tracks do |t|
+    create_table :memento_tracks do |t|
       t.string :action_type
       t.binary :recorded_data, :limit => 1.megabytes
       t.references :recorded_object, :polymorphic => true

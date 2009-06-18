@@ -1,4 +1,4 @@
-module Tapedeck::Action
+module Memento::Action
   
   class Base
     def initialize(track)

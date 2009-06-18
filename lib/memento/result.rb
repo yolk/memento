@@ -1,4 +1,4 @@
-class Tapedeck::ResultArray < Array
+class Memento::ResultArray < Array
   
   def errors
     self.find_all{ |result| result.failed? }
@@ -14,7 +14,7 @@ class Tapedeck::ResultArray < Array
   
 end
 
-class Tapedeck::Result
+class Memento::Result
   
   attr_reader :object, :track
   
@@ -23,7 +23,7 @@ class Tapedeck::Result
   end
   
   def error
-    @object.errors[:tapedeck_rewind]
+    @object.errors[:memento_rewind]
   end
   
   def failed?

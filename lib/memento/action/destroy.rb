@@ -1,4 +1,4 @@
-class Tapedeck::Action::Destroy < Tapedeck::Action::Base
+class Memento::Action::Destroy < Memento::Action::Base
   
   def record
     recorded_object.attributes_for_recording

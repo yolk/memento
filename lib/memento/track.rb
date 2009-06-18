@@ -1,18 +1,18 @@
-class Tapedeck::Track < ActiveRecord::Base
-  set_table_name "tapedeck_tracks"
+class Memento::Track < ActiveRecord::Base
+  set_table_name "memento_tracks"
   
-  belongs_to :session, :class_name => "Tapedeck::Session"
+  belongs_to :session, :class_name => "Memento::Session"
   belongs_to :recorded_object, :polymorphic => true
   
   validates_presence_of :session
   validates_presence_of :recorded_object
   validates_presence_of :action_type
-  validates_inclusion_of :action_type, :in => Tapedeck::Action::Base.action_types, :allow_blank => true
+  validates_inclusion_of :action_type, :in => Memento::Action::Base.action_types, :allow_blank => true
   
   before_create :set_recorded_data
   
   def rewind
-    Tapedeck::Result.new(action.rewind, self)
+    Memento::Result.new(action.rewind, self)
   end
   
   def recorded_data
@@ -41,7 +41,7 @@ class Tapedeck::Track < ActiveRecord::Base
   end
   
   def later_tracks_on_recorded_object_for(action_type_param)
-    Tapedeck::Track.all(:conditions => [
+    Memento::Track.all(:conditions => [
       "recorded_object_id = ? AND recorded_object_type = ? AND " + 
       "action_type = ? AND created_at >= ? AND id != ? ", 
       recorded_object_id, recorded_object_type, action_type_param.to_s, created_at, id
@@ -55,7 +55,7 @@ class Tapedeck::Track < ActiveRecord::Base
   end
   
   def action
-    "tapedeck/action/#{action_type}".classify.constantize.new(self)
+    "memento/action/#{action_type}".classify.constantize.new(self)
   end
   
 end

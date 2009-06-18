@@ -6,7 +6,7 @@ class FooController < ActionController::Base
   
 end
 
-describe Tapedeck::RecordInController do
+describe Memento::RecordInController do
   
   before do
     setup_db
@@ -25,19 +25,19 @@ describe Tapedeck::RecordInController do
     FooController.private_instance_methods.should include("recording")
   end
   
-  it "should call tapedeck#recording with user and block" do
+  it "should call memento#recording with user and block" do
     project = Project.create!
     @controller.send(:recording) do
       project.update_attribute(:name, "P7")
     end
     project.reload.name.should eql("P7")
-    project.tapedeck_tracks.count.should eql(1)
-    Tapedeck::Session.count.should eql(1)
+    project.memento_tracks.count.should eql(1)
+    Memento::Session.count.should eql(1)
   end
   
-  it "should set header X-TapedeckSessionId" do
+  it "should set header X-MementoSessionId" do
     @controller.send(:recording) { Project.create!.update_attribute(:name, "P7") }
-    @headers.should == {'X-TapedeckSessionId' => Tapedeck::Session.last.id }
+    @headers.should == {'X-MementoSessionId' => Memento::Session.last.id }
   end
   
   it "should return result of given block" do

@@ -1,4 +1,4 @@
-class Tapedeck::Action::Create < Tapedeck::Action::Base
+class Memento::Action::Create < Memento::Action::Base
   
   def record;end
   
@@ -29,7 +29,7 @@ class Tapedeck::Action::Create < Tapedeck::Action::Base
   end
   
   def was_changed
-    recorded_object.errors.add(:tapedeck_rewind, ActiveSupport::StringInquirer.new("was_changed"))
+    recorded_object.errors.add(:memento_rewind, ActiveSupport::StringInquirer.new("was_changed"))
     recorded_object
   end
   

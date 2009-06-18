@@ -4,10 +4,10 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "tapedeck"
+    gem.name = "memento"
     gem.summary = %Q{TODO}
     gem.email = "sebastian@yo.lk"
-    gem.homepage = "http://github.com/yolk/tapedeck"
+    gem.homepage = "http://github.com/yolk/memento"
     gem.authors = ["Sebastian Munz"]
 
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

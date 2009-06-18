@@ -1,7 +1,7 @@
-class Tapedeck::Session < ActiveRecord::Base
-  set_table_name "tapedeck_sessions"
+class Memento::Session < ActiveRecord::Base
+  set_table_name "memento_sessions"
   
-  has_many :tracks, :class_name => "Tapedeck::Track", :dependent => :delete_all
+  has_many :tracks, :class_name => "Memento::Track", :dependent => :delete_all
   belongs_to :user
   validates_presence_of :user
   
@@ -10,7 +10,7 @@ class Tapedeck::Session < ActiveRecord::Base
   end
   
   def rewind
-    tracks.map(&:rewind).inject(Tapedeck::ResultArray.new) do |results, result|
+    tracks.map(&:rewind).inject(Memento::ResultArray.new) do |results, result|
       result.track.destroy if result.success?
       results << result
     end
@@ -21,7 +21,7 @@ class Tapedeck::Session < ActiveRecord::Base
   def rewind!
     transaction do
       returning(rewind) do |results|
-        raise Tapedeck::ErrorOnRewind if results.failed?
+        raise Memento::ErrorOnRewind if results.failed?
       end
     end
   end

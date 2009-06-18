@@ -1,4 +1,4 @@
-class Tapedeck
+class Memento
   include Singleton
   
   class ErrorOnRewind < StandardError;end
@@ -13,7 +13,7 @@ class Tapedeck
   
   def start(user_or_id)
     user = User.find_by_id(user_or_id)
-    @session = user ? Tapedeck::Session.new(:user => user) : nil
+    @session = user ? Memento::Session.new(:user => user) : nil
   end
   
   def stop
@@ -36,9 +36,9 @@ class Tapedeck
   end
 end
 
-require 'tapedeck/result'
-require 'tapedeck/action'
-require 'tapedeck/record_changes'
-require 'tapedeck/record_in_controller'
-require 'tapedeck/track'
-require 'tapedeck/session'
+require 'memento/result'
+require 'memento/action'
+require 'memento/record_changes'
+require 'memento/record_in_controller'
+require 'memento/track'
+require 'memento/session'

@@ -1,4 +1,4 @@
-module Tapedeck::RecordChanges
+module Memento::RecordChanges
   
   IGNORE_ATTRIBUTES = [:updated_at, :created_at]
   
@@ -8,7 +8,7 @@ module Tapedeck::RecordChanges
   
   module ClassMethods
     
-    def record_changes(action_type_types=Tapedeck::Action::Base.action_types)
+    def record_changes(action_type_types=Memento::Action::Base.action_types)
       include InstanceMethods
       
       action_type_types.each do |action_type|
@@ -18,29 +18,29 @@ module Tapedeck::RecordChanges
         send :"after_#{action_type}", :"record_#{action_type}" unless callback_exists
       end
       
-      has_many :tapedeck_tracks, :class_name => "Tapedeck::Track", :as => :recorded_object
+      has_many :memento_tracks, :class_name => "Memento::Track", :as => :recorded_object
     end
   end
   
   module InstanceMethods
     
     def attributes_for_recording
-      attributes.delete_if{|key, value| Tapedeck::RecordChanges::IGNORE_ATTRIBUTES.include?(key.to_sym) }
+      attributes.delete_if{|key, value| Memento::RecordChanges::IGNORE_ATTRIBUTES.include?(key.to_sym) }
     end
     
     def changes_for_recording
-      changes.delete_if{|key, value| Tapedeck::RecordChanges::IGNORE_ATTRIBUTES.include?(key.to_sym) }
+      changes.delete_if{|key, value| Memento::RecordChanges::IGNORE_ATTRIBUTES.include?(key.to_sym) }
     end
     
     private
     
-    Tapedeck::Action::Base.action_types.each do |action_type|
+    Memento::Action::Base.action_types.each do |action_type|
       define_method :"record_#{action_type}" do
-        Tapedeck.instance.add_track(action_type, self)
+        Memento.instance.add_track(action_type, self)
       end
     end
   end
   
 end
 
-ActiveRecord::Base.send(:include, Tapedeck::RecordChanges) if defined?(ActiveRecord::Base)
+ActiveRecord::Base.send(:include, Memento::RecordChanges) if defined?(ActiveRecord::Base)

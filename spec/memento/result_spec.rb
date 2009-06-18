@@ -1,12 +1,12 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
-describe Tapedeck::Result do
+describe Memento::Result do
   
   describe "when initalized with valid object" do
     before do
       @object = mock("object", :errors => {})
       @track = mock("track1")
-      @result = Tapedeck::Result.new(@object, @track)
+      @result = Memento::Result.new(@object, @track)
     end
 
     it "should have an object attribute" do
@@ -29,8 +29,8 @@ describe Tapedeck::Result do
   
   describe "when initalized with object with errors" do
     before do
-      @object = mock("object", :errors => {:tapedeck_rewind => "123"})
-      @result = Tapedeck::Result.new(@object, mock("track1"))
+      @object = mock("object", :errors => {:memento_rewind => "123"})
+      @result = Memento::Result.new(@object, mock("track1"))
     end
     
     it "should have an object attribute" do
@@ -49,10 +49,10 @@ describe Tapedeck::Result do
 
 end
 
-describe Tapedeck::ResultArray do
+describe Memento::ResultArray do
   
   before do
-    @results = Tapedeck::ResultArray.new()
+    @results = Memento::ResultArray.new()
   end
   
   it "should have an empty errors array" do
@@ -64,11 +64,11 @@ describe Tapedeck::ResultArray do
     @results.should_not be_failed
   end
   
-  describe "when Tapedeck::Result without errors added" do
+  describe "when Memento::Result without errors added" do
     before do
-      @object = mock("object", :errors => {:tapedeck_rewind => "123"})
-      @results << Tapedeck::Result.new(mock("object2", :errors => {}), mock("track1"))
-      @results << (@with_error = Tapedeck::Result.new(@object, mock("track2")))
+      @object = mock("object", :errors => {:memento_rewind => "123"})
+      @results << Memento::Result.new(mock("object2", :errors => {}), mock("track1"))
+      @results << (@with_error = Memento::Result.new(@object, mock("track2")))
     end
     
     it "should have two entrys" do

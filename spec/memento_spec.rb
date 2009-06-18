@@ -1,0 +1,140 @@
+require File.join(File.dirname(__FILE__), 'spec_helper')
+
+describe Memento do
+  before do
+    setup_db
+    setup_data
+  end
+  
+  after do
+    shutdown_db
+  end
+  
+  it "should be a singleton" do
+    Memento.instance.should be_kind_of(Singleton)
+    Memento.instance.should eql(Memento.instance)
+    lambda{ Memento.new }.should raise_error(NoMethodError)
+  end
+  
+  it "should not be recording by default" do
+    Memento.instance.should_not be_recording
+  end
+  
+  describe "start" do
+    
+    before do
+      Memento.instance.start(@user)
+      @session = Memento.instance.instance_variable_get("@session")
+    end
+    
+    it "should require user or user_id on start" do
+      lambda{ Memento.instance.start }.should raise_error(ArgumentError)
+    end
+    
+    it "should set an unsaved memento_session when starting" do
+      Memento::Session.count.should eql(0)
+      @session.should be_kind_of(Memento::Session)
+      @session.should be_new_record
+    end
+    
+    it "should set user on session" do
+      @session.user.should eql(User.first)
+    end
+    
+    it "should set user when passing in id as integer" do
+      Memento.instance.start(User.create(:name => "MyUser2").id)
+      Memento.instance.instance_variable_get("@session").user.should eql(User.last)
+    end
+    
+    it "should not start recording when user does not exists/is invalid" do
+      Memento.instance.stop
+      Memento.instance.start(123333)
+      Memento.instance.should_not be_recording
+      Memento.instance.start("123")
+      Memento.instance.should_not be_recording
+    end
+    
+    it "should be recording" do
+      Memento.instance.should be_recording
+    end
+    
+  end
+  
+  describe "stop" do
+    before do
+      Memento.instance.start(@user)
+      Memento.instance.stop
+    end
+    
+    it "should not be recording" do
+      Memento.instance.should_not be_recording
+    end
+    
+    it "should remove session if no tracks created" do
+      Memento::Session.count.should eql(0)
+    end
+  end
+  
+  describe "recording block" do
+    
+    it "should record inside of block and stop after" do
+      Memento.instance.should_not be_recording
+      Memento.instance.recording(@user) do
+        Memento.instance.should be_recording
+      end
+      Memento.instance.should_not be_recording
+    end
+    
+    it "should give back session" do
+      Memento.instance.recording(@user) do
+        1 + 1
+      end.should be_a(Memento::Session)
+    end
+    
+    it "should raise error in block and stop session" do
+      lambda {
+        Memento.instance.recording(@user) do
+          raise StandardError
+        end.should be_nil
+      }.should raise_error(StandardError)
+      Memento.instance.should_not be_recording
+    end
+    
+  end
+  
+  describe "when recording" do
+    before do
+      @project =  Project.create(:name => "P1")
+      Memento.instance.start(@user)
+    end
+    
+    after do
+      Memento.instance.stop
+    end
+    
+    it "should create memento_track for ar-object with action_type" do
+      Memento::Track.count.should eql(0)
+      Memento.instance.add_track :destroy, @project
+      Memento::Track.count.should eql(1)
+      Memento::Track.first.action_type.should eql("destroy")
+      Memento::Track.first.recorded_object.should eql(Project.last)
+    end
+    
+    it "should save session on first added track" do
+      Memento::Session.count.should eql(0)
+      Memento.instance.add_track :destroy, @project
+      Memento::Session.count.should eql(1)
+    end
+    
+  end
+  
+  describe "when not recording" do
+    
+    it "should NOT create memento_track for ar-object with action_type" do
+      Memento.instance.add_track :destroy, Project.create(:name => "P1")
+      Memento::Track.count.should eql(0)
+    end
+    
+  end
+  
+end

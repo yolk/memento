@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
-describe Tapedeck::RecordChanges do
+describe Memento::RecordChanges do
   
   before do
     setup_db
@@ -11,21 +11,21 @@ describe Tapedeck::RecordChanges do
     Project.private_instance_methods.should include("record_destroy", "record_update", "record_create")
   end
   
-  it "should set hook on create to call Tapedeck" do
+  it "should set hook on create to call Memento" do
     project = Project.new(:name => "Project X")
-    Tapedeck.instance.should_receive(:add_track).once().with("create", project)
+    Memento.instance.should_receive(:add_track).once().with("create", project)
     project.save!
   end
   
-  it "should set hook on update to call Tapedeck" do
+  it "should set hook on update to call Memento" do
     project = Project.create!(:name => "Project X")
-    Tapedeck.instance.should_receive(:add_track).once().with("update", project)
+    Memento.instance.should_receive(:add_track).once().with("update", project)
     project.update_attribute(:name, "Project XY")
   end
   
-  it "should set hook on destroy to call Tapedeck" do
+  it "should set hook on destroy to call Memento" do
     project = Project.create!(:name => "Project X")
-    Tapedeck.instance.should_receive(:add_track).once().with("destroy", project)
+    Memento.instance.should_receive(:add_track).once().with("destroy", project)
     project.destroy
   end
   
@@ -44,15 +44,15 @@ describe Tapedeck::RecordChanges do
     project.changes_for_recording.should == {"name"=>["Project X", "A Project"], "notes"=>[nil, "new"]}
   end
   
-  it "should define has_many association to tapedeck_tracks" do
+  it "should define has_many association to memento_tracks" do
     project = Project.create!(:name => "Project X")
-    project.tapedeck_tracks.should be_empty
-    Tapedeck.instance.recording(@user) { project.update_attribute(:name, "Project X") }
-    project.tapedeck_tracks.count.should eql(1)
-    Tapedeck.instance.recording(@user) { Project.create!.update_attribute(:name, "Project X") }
-    project.tapedeck_tracks.count.should eql(1)
-    Project.last.tapedeck_tracks.count.should eql(2)
-    Tapedeck::Track.count.should eql(3)
+    project.memento_tracks.should be_empty
+    Memento.instance.recording(@user) { project.update_attribute(:name, "Project X") }
+    project.memento_tracks.count.should eql(1)
+    Memento.instance.recording(@user) { Project.create!.update_attribute(:name, "Project X") }
+    project.memento_tracks.count.should eql(1)
+    Project.last.memento_tracks.count.should eql(2)
+    Memento::Track.count.should eql(3)
   end
   
   after do

@@ -1,4 +1,4 @@
-class Tapedeck::Action::Update < Tapedeck::Action::Base
+class Memento::Action::Update < Memento::Action::Base
   
   def record
     recorded_object.changes_for_recording
@@ -38,13 +38,13 @@ class Tapedeck::Action::Update < Tapedeck::Action::Base
   
   def was_destroyed
     @track.new_object do |object|
-      object.errors.add(:tapedeck_rewind, ActiveSupport::StringInquirer.new("was_destroyed"))
+      object.errors.add(:memento_rewind, ActiveSupport::StringInquirer.new("was_destroyed"))
       object.id = @track.recorded_object_id
     end
   end
   
   def was_changed
-    recorded_object.errors.add(:tapedeck_rewind, ActiveSupport::StringInquirer.new("was_destroyed"))
+    recorded_object.errors.add(:memento_rewind, ActiveSupport::StringInquirer.new("was_destroyed"))
     recorded_object
   end
   

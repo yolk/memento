@@ -1,11 +1,11 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
-describe Tapedeck::Session do
+describe Memento::Session do
   
   before do
     setup_db
     setup_data
-    @session = Tapedeck::Session.create(:user => @user)
+    @session = Memento::Session.create(:user => @user)
   end
   
   it "should belong to user" do
@@ -13,7 +13,7 @@ describe Tapedeck::Session do
   end
   
   it "should require user" do
-    Tapedeck::Session.create.errors[:user].should eql("can't be blank")
+    Memento::Session.create.errors[:user].should eql("can't be blank")
   end
   
   it "should have_many tracks" do
@@ -58,7 +58,7 @@ describe Tapedeck::Session do
       
       it "should destroy itself" do
         @session.rewind
-        Tapedeck::Session.find_by_id(@session.id).should be_nil
+        Memento::Session.find_by_id(@session.id).should be_nil
       end
       
       it "should destroy all tracks" do
@@ -92,23 +92,23 @@ describe Tapedeck::Session do
   describe "on rewind!" do
     before do
       @track1 = @session.tracks.create!(:action_type => "update", :recorded_object => @p1 = Project.create!)
-      Tapedeck::Session.create!(:user => @user).tracks.create!(:action_type => "destroy", :recorded_object => Project.create!)
+      Memento::Session.create!(:user => @user).tracks.create!(:action_type => "destroy", :recorded_object => Project.create!)
       @track2 = @session.tracks.create!(:action_type => "update", :recorded_object => @p2 = Project.create!)
     end
     
     describe "and all tracks succeed" do
       it "should return ResultsArray" do
-        @session.rewind!.should be_a(Tapedeck::ResultArray)
+        @session.rewind!.should be_a(Memento::ResultArray)
       end
       
       it "should remove all tracks" do
         @session.rewind!
-        Tapedeck::Track.count.should eql(1)
+        Memento::Track.count.should eql(1)
       end
       
       it "should remove itself" do
         @session.rewind!
-        Tapedeck::Session.find_by_id(@session.id).should be_nil
+        Memento::Session.find_by_id(@session.id).should be_nil
       end
     end
     
@@ -122,7 +122,7 @@ describe Tapedeck::Session do
       
       it "should keep all tracks" do
         @session.rewind! rescue
-        Tapedeck::Track.count.should eql(3)
+        Memento::Track.count.should eql(3)
       end
       
       it "should keep itself" do
@@ -130,8 +130,8 @@ describe Tapedeck::Session do
         @session.reload
       end
       
-      it "should raise Tapedeck::ErrorOnRewind" do
-        lambda{ @session.rewind! }.should raise_error(Tapedeck::ErrorOnRewind)
+      it "should raise Memento::ErrorOnRewind" do
+        lambda{ @session.rewind! }.should raise_error(Memento::ErrorOnRewind)
       end
     end
     
@@ -143,7 +143,7 @@ describe Tapedeck::Session do
 
       it "should keep all tracks" do
         @session.rewind! rescue nil
-        Tapedeck::Track.count.should eql(3)
+        Memento::Track.count.should eql(3)
       end
 
       it "should keep itself" do
@@ -151,8 +151,8 @@ describe Tapedeck::Session do
         @session.reload
       end
       
-      it "should raise Tapedeck::ErrorOnRewind" do
-        lambda{ @session.rewind! }.should raise_error(Tapedeck::ErrorOnRewind)
+      it "should raise Memento::ErrorOnRewind" do
+        lambda{ @session.rewind! }.should raise_error(Memento::ErrorOnRewind)
       end
     end
   end
@@ -160,14 +160,14 @@ describe Tapedeck::Session do
   describe "with tracks" do
     before do
       @session.tracks.create!(:action_type => "destroy", :recorded_object => Project.create!)
-      Tapedeck::Session.create!(:user => @user).tracks.create!(:action_type => "destroy", :recorded_object => Project.create!)
+      Memento::Session.create!(:user => @user).tracks.create!(:action_type => "destroy", :recorded_object => Project.create!)
       @track2 = @session.tracks.create!(:action_type => "update", :recorded_object => Project.create!)
     end
     
     it "should destroy all tracks when destroyed" do
-      Tapedeck::Track.count.should eql(3)
+      Memento::Track.count.should eql(3)
       @session.destroy
-      Tapedeck::Track.count.should eql(1)
+      Memento::Track.count.should eql(1)
     end
     
   end
