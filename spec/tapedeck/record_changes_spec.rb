@@ -47,9 +47,9 @@ describe Tapedeck::RecordChanges do
   it "should define has_many association to tapedeck_tracks" do
     project = Project.create!(:name => "Project X")
     project.tapedeck_tracks.should be_empty
-    Tapedeck.instance.record(@user) { project.update_attribute(:name, "Project X") }
+    Tapedeck.instance.recording(@user) { project.update_attribute(:name, "Project X") }
     project.tapedeck_tracks.count.should eql(1)
-    Tapedeck.instance.record(@user) { Project.create!.update_attribute(:name, "Project X") }
+    Tapedeck.instance.recording(@user) { Project.create!.update_attribute(:name, "Project X") }
     project.tapedeck_tracks.count.should eql(1)
     Project.last.tapedeck_tracks.count.should eql(2)
     Tapedeck::Track.count.should eql(3)

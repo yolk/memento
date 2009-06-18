@@ -57,7 +57,7 @@ describe Tapedeck::Action::Create, "when object is created" do
       end
     
       it "should give back fake unsaved record with all data set when destruction was tracked" do
-        Tapedeck.instance.record(@user) { Project.last.destroy }
+        Tapedeck.instance.recording(@user) { Project.last.destroy }
         Tapedeck::Track.last.update_attribute(:created_at, 5.minutes.from_now)
         @rewinded = Tapedeck::Session.first.rewind
         @rewinded.size.should eql(1)

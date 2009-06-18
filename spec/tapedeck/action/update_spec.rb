@@ -5,7 +5,7 @@ describe Tapedeck::Action::Update, "when object gets updated" do
     setup_db
     setup_data
     @project = Project.create!(:name => "P1", :closed_at => 3.days.ago, :notes => "Bla bla").reload
-    Tapedeck.instance.record(@user) do
+    Tapedeck.instance.recording(@user) do
       @customer = Customer.create!(:name => "C1")
       @project.update_attributes(:name => "P2", :closed_at => 2.days.ago, :customer => @customer, :notes => "Bla bla")
     end
@@ -81,7 +81,7 @@ describe Tapedeck::Action::Update, "when object gets updated" do
   
     describe "with mergeable tracked changes" do
       before do
-        Tapedeck.instance.record(@user) do
+        Tapedeck.instance.recording(@user) do
           @project.update_attributes({:notes => "Bla!"})
         end
         Tapedeck::Track.last.update_attribute(:created_at, 1.minute.from_now)
@@ -142,7 +142,7 @@ describe Tapedeck::Action::Update, "when object gets updated" do
     
     describe "with unmergeable tracked changes" do
       before do
-        Tapedeck.instance.record(@user) do
+        Tapedeck.instance.recording(@user) do
           @project.update_attributes!({:name => "P3"})
         end
         Tapedeck::Track.last.update_attribute(:created_at, 1.minute.from_now)

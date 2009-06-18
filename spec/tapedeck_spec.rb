@@ -79,9 +79,24 @@ describe Tapedeck do
     
     it "should record inside of block and stop after" do
       Tapedeck.instance.should_not be_recording
-      Tapedeck.instance.record(@user) do
+      Tapedeck.instance.recording(@user) do
         Tapedeck.instance.should be_recording
       end
+      Tapedeck.instance.should_not be_recording
+    end
+    
+    it "should give back session" do
+      Tapedeck.instance.recording(@user) do
+        1 + 1
+      end.should be_a(Tapedeck::Session)
+    end
+    
+    it "should raise error in block and stop session" do
+      lambda {
+        Tapedeck.instance.recording(@user) do
+          raise StandardError
+        end.should be_nil
+      }.should raise_error(StandardError)
       Tapedeck.instance.should_not be_recording
     end
     
