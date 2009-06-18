@@ -16,8 +16,8 @@ describe Memento do
     lambda{ Memento.new }.should raise_error(NoMethodError)
   end
   
-  it "should not be recording by default" do
-    Memento.instance.should_not be_recording
+  it "should not be memento by default" do
+    Memento.instance.should_not be_active
   end
   
   describe "start" do
@@ -46,16 +46,16 @@ describe Memento do
       Memento.instance.instance_variable_get("@session").user.should eql(User.last)
     end
     
-    it "should not start recording when user does not exists/is invalid" do
+    it "should not start memento when user does not exists/is invalid" do
       Memento.instance.stop
       Memento.instance.start(123333)
-      Memento.instance.should_not be_recording
+      Memento.instance.should_not be_active
       Memento.instance.start("123")
-      Memento.instance.should_not be_recording
+      Memento.instance.should_not be_active
     end
     
-    it "should be recording" do
-      Memento.instance.should be_recording
+    it "should be memento" do
+      Memento.instance.should be_active
     end
     
   end
@@ -66,8 +66,8 @@ describe Memento do
       Memento.instance.stop
     end
     
-    it "should not be recording" do
-      Memento.instance.should_not be_recording
+    it "should not be memento" do
+      Memento.instance.should_not be_active
     end
     
     it "should remove session if no states created" do
@@ -75,34 +75,34 @@ describe Memento do
     end
   end
   
-  describe "recording block" do
+  describe "memento block" do
     
     it "should record inside of block and stop after" do
-      Memento.instance.should_not be_recording
-      Memento.instance.recording(@user) do
-        Memento.instance.should be_recording
+      Memento.instance.should_not be_active
+      Memento.instance.memento(@user) do
+        Memento.instance.should be_active
       end
-      Memento.instance.should_not be_recording
+      Memento.instance.should_not be_active
     end
     
     it "should give back session" do
-      Memento.instance.recording(@user) do
+      Memento.instance.memento(@user) do
         1 + 1
       end.should be_a(Memento::Session)
     end
     
     it "should raise error in block and stop session" do
       lambda {
-        Memento.instance.recording(@user) do
+        Memento.instance.memento(@user) do
           raise StandardError
         end.should be_nil
       }.should raise_error(StandardError)
-      Memento.instance.should_not be_recording
+      Memento.instance.should_not be_active
     end
     
   end
   
-  describe "when recording" do
+  describe "when memento" do
     before do
       @project =  Project.create(:name => "P1")
       Memento.instance.start(@user)
@@ -128,7 +128,7 @@ describe Memento do
     
   end
   
-  describe "when not recording" do
+  describe "when not memento" do
     
     it "should NOT create memento_state for ar-object with action_type" do
       Memento.instance.add_state :destroy, Project.create(:name => "P1")

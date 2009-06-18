@@ -57,7 +57,7 @@ describe Memento::Action::Create, "when object is created" do
       end
     
       it "should give back fake unsaved record with all data set when destruction was stateed" do
-        Memento.instance.recording(@user) { Project.last.destroy }
+        Memento.instance.memento(@user) { Project.last.destroy }
         Memento::State.last.update_attribute(:created_at, 5.minutes.from_now)
         @undone = Memento::Session.first.undo
         @undone.size.should eql(1)

@@ -21,13 +21,13 @@ describe Memento::ActionControllerMethods do
     shutdown_db
   end
   
-  it "should add recording-method to ActionController::Base" do
-    FooController.private_instance_methods.should include("recording")
+  it "should add memento-method to ActionController::Base" do
+    FooController.private_instance_methods.should include("memento")
   end
   
-  it "should call memento#recording with user and block" do
+  it "should call memento#memento with user and block" do
     project = Project.create!
-    @controller.send(:recording) do
+    @controller.send(:memento) do
       project.update_attribute(:name, "P7")
     end
     project.reload.name.should eql("P7")
@@ -36,12 +36,12 @@ describe Memento::ActionControllerMethods do
   end
   
   it "should set header X-MementoSessionId" do
-    @controller.send(:recording) { Project.create!.update_attribute(:name, "P7") }
+    @controller.send(:memento) { Project.create!.update_attribute(:name, "P7") }
     @headers.should == {'X-MementoSessionId' => Memento::Session.last.id }
   end
   
   it "should return result of given block" do
-    @controller.send(:recording) do
+    @controller.send(:memento) do
       1 + 2
     end.should eql(3)
   end

@@ -47,9 +47,9 @@ describe Memento::ActiveRecordMethods do
   it "should define has_many association to memento_states" do
     project = Project.create!(:name => "Project X")
     project.memento_states.should be_empty
-    Memento.instance.recording(@user) { project.update_attribute(:name, "Project X") }
+    Memento.instance.memento(@user) { project.update_attribute(:name, "Project X") }
     project.memento_states.count.should eql(1)
-    Memento.instance.recording(@user) { Project.create!.update_attribute(:name, "Project X") }
+    Memento.instance.memento(@user) { Project.create!.update_attribute(:name, "Project X") }
     project.memento_states.count.should eql(1)
     Project.last.memento_states.count.should eql(2)
     Memento::State.count.should eql(3)

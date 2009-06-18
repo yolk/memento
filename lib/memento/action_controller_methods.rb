@@ -3,9 +3,9 @@ class Memento
     
     private
     
-    def recording
+    def memento
       block_result = nil
-      response.headers["X-MementoSessionId"] = Memento.instance.recording(current_user) do
+      response.headers["X-MementoSessionId"] = Memento.instance.memento(current_user) do
         block_result = yield
       end.id
       block_result

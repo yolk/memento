@@ -3,7 +3,7 @@ class Memento
   
   class ErrorOnRewind < StandardError;end
   
-  def recording(user)
+  def memento(user)
     start(user)
     yield
     @session
@@ -25,14 +25,14 @@ class Memento
     @session.add_state(action_type, record)
   end
   
-  def recording?
+  def active?
     !!(defined?(@session) && @session)
   end
   
   private
   
   def save_session
-    recording? && (!@session.changed? || @session.save)
+    active? && (!@session.changed? || @session.save)
   end
 end
 
