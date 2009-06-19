@@ -8,10 +8,16 @@ module Memento::ActiveRecordMethods
   
   module ClassMethods
     
-    def memento_changes(action_type_types=Memento::Action::Base.action_types)
+    def memento_changes(*action_types)
       include InstanceMethods
       
-      action_type_types.each do |action_type|
+      action_types = Memento::Action::Base.action_types if action_types.empty?
+      action_types.map!(&:to_s).uniq!
+      unless (invalid = action_types - Memento::Action::Base.action_types).empty?
+        raise ArgumentError.new("Invalid memento_changes: #{invalid.to_sentence}; allowed are only #{Memento::Action::Base.action_types.to_sentence}")
+      end
+      
+      action_types.each do |action_type|
         callback_exists = send(:"after_#{action_type}_callback_chain").any? do |callback|
           callback.method.to_sym == :"record_#{action_type}"
         end
