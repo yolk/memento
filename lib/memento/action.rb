@@ -13,6 +13,10 @@ module Memento::Action
       @state.record_data
     end
     
+    def fetch?
+      true
+    end
+    
     def self.inherited(child)
       action_type = child.name.demodulize.underscore
       write_inheritable_attribute(:action_types, action_types << action_type)

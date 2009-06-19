@@ -11,6 +11,12 @@ class Memento::State < ActiveRecord::Base
   
   before_create :set_record_data
   
+  def self.store(action_type, record)
+    self.new(:action_type => action_type.to_s, :record => record) do |state|
+      state.save if state.fetch?
+    end
+  end
+  
   def undo
     Memento::Result.new(action.undo, self)
   end
@@ -22,6 +28,10 @@ class Memento::State < ActiveRecord::Base
   def record_data=(data)
     @record_data = nil
     super(Marshal.dump(data))
+  end
+  
+  def fetch?
+    action.fetch?
   end
   
   def new_object

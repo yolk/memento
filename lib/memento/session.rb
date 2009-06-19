@@ -6,7 +6,7 @@ class Memento::Session < ActiveRecord::Base
   validates_presence_of :user
   
   def add_state(action_type, record)
-    states.create(:action_type => action_type.to_s, :record => record)
+    states.store(action_type, record)
   end
   
   def undo

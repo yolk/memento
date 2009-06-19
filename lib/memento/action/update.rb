@@ -4,6 +4,10 @@ class Memento::Action::Update < Memento::Action::Base
     record.changes_for_memento
   end
   
+  def fetch?
+    record.changes_for_memento.any?
+  end
+  
   def undo
     if !record
       was_destroyed

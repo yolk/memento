@@ -17,6 +17,7 @@ class Memento
   end
   
   def stop
+    @session.destroy if @session && @session.states.count.zero?
     @session = nil
   end
   
