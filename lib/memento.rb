@@ -6,7 +6,7 @@ class Memento
   def memento(user)
     start(user)
     yield
-    @session
+    !@session.states.count.zero? && @session rescue false
   ensure
     stop
   end

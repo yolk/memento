@@ -8,7 +8,7 @@ class Memento
       memento_session = Memento.instance.memento(current_user) do
         block_result = yield
       end
-      if memento_session && memento_session.id
+      if memento_session
         response.headers["X-Memento-Session-Id"] = memento_session.id.to_s
       end
       block_result

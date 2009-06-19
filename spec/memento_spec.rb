@@ -85,10 +85,16 @@ describe Memento do
       Memento.instance.should_not be_active
     end
     
-    it "should give back session" do
+    it "should give back session when states created" do
+      Memento.instance.memento(@user) do
+        Project.create!
+      end.should be_a(Memento::Session)
+    end
+    
+    it "should give back false when no states created" do
       Memento.instance.memento(@user) do
         1 + 1
-      end.should be_a(Memento::Session)
+      end.should be_false
     end
     
     it "should raise error in block and stop session" do
