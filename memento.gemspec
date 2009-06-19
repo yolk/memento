@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{memento}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yolk Sebastian Munz & Julia Soergel GbR"]
-  s.date = %q{2009-06-18}
+  s.date = %q{2009-06-19}
   s.email = %q{sebastian@yo.lk}
   s.extra_rdoc_files = [
     "LICENSE",
