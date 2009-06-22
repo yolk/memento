@@ -29,17 +29,18 @@ describe Memento::ActiveRecordMethods do
     project.destroy
   end
   
-  it "should define attributes_for_memento and ignore attributes" do
+  it "should define attributes_for_memento and ignore attributes given by options" do
     Project.create!(:name => "Project X").attributes_for_memento.should == {
       "id"=>1, "name"=>"Project X", "notes"=>nil, "customer_id"=>nil, "closed_at"=>nil
     }
   end
   
-  it "should define changes_for_memento and ignore attributes" do
+  it "should define changes_for_memento and ignore attributes given by options" do
     project = Project.create!(:name => "Project X")
     project.name = "A Project"
     project.updated_at = 5.minutes.ago
     project.notes = "new"
+    project.ignore_this = 2
     project.changes_for_memento.should_not == project.changes
     project.changes_for_memento.should == {"name"=>["Project X", "A Project"], "notes"=>[nil, "new"]}
   end

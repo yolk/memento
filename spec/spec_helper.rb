@@ -28,6 +28,7 @@ def setup_db
       t.column :closed_at, :datetime
       t.column :notes, :string
       t.references :customer
+      t.integer :ignore_this
       t.timestamps
     end
     
@@ -78,5 +79,5 @@ end
 class Project < ActiveRecord::Base
   belongs_to :customer
   
-  memento_changes
+  memento_changes :ignore => :ignore_this
 end
