@@ -27,10 +27,21 @@ class Memento
   end
   
   def active?
-    !!(defined?(@session) && @session)
+    !!(defined?(@session) && @session) && !ignore?
+  end
+  
+  def ignore
+    @ignore = true
+    yield
+  ensure
+    @ignore = false
   end
   
   private
+  
+  def ignore?
+    defined?(@ignore) && @ignore
+  end
   
   def save_session
     active? && (!@session.changed? || @session.save)

@@ -108,7 +108,7 @@ describe Memento do
     
   end
   
-  describe "when memento" do
+  describe "when active" do
     before do
       @project =  Project.create(:name => "P1")
       Memento.instance.start(@user)
@@ -132,9 +132,19 @@ describe Memento do
       Memento::Session.count.should eql(1)
     end
     
+    describe "when ignoring" do
+      it "should NOT create memento_state for ar-object with action_type" do
+        Memento.instance.ignore do
+          Memento.instance.add_state :destroy, Project.create(:name => "P1")
+        end
+        
+        Memento::State.count.should eql(0)
+      end
+    end
+    
   end
   
-  describe "when not memento" do
+  describe "when not active" do
     
     it "should NOT create memento_state for ar-object with action_type" do
       Memento.instance.add_state :destroy, Project.create(:name => "P1")
