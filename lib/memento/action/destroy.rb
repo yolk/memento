@@ -5,8 +5,13 @@ class Memento::Action::Destroy < Memento::Action::Base
   end
   
   def undo
-    @state.rebuild_object(:id) do |object|
-      object.save!
+    @state.rebuild_object do |object|
+      begin
+        object.save!
+      rescue
+        object.id = nil
+        object.save!
+      end
       @state.update_attribute(:record, object)
     end
   end
