@@ -74,3 +74,23 @@ describe Memento::Action::Create, "when object is created" do
   
   
 end
+
+describe Memento::Action::Create, "when object without timestamp is created" do
+  before do
+    setup_db
+    setup_data
+    Memento.instance.memento(@user) do
+      @obj = TimestamplessObject.create!(:name => "O1").reload
+    end
+  end
+  
+  after do
+    shutdown_db
+  end
+  
+  describe "when undoing the creation" do
+    it "should give back undone_object" do
+      Memento::Session.last.undo.map{|e| e.object.class }.should eql([TimestamplessObject])
+    end
+  end
+end

@@ -43,6 +43,10 @@ def setup_db
       t.timestamps
     end
     
+    create_table :timestampless_objects do |t|
+      t.column :name, :string
+    end
+    
     create_table :memento_sessions do |t|
       t.references :user
       t.timestamps
@@ -80,4 +84,8 @@ class Project < ActiveRecord::Base
   belongs_to :customer
   
   memento_changes :ignore => :ignore_this
+end
+
+class TimestamplessObject < ActiveRecord::Base
+  memento_changes
 end

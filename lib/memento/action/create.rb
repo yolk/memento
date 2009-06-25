@@ -15,7 +15,7 @@ class Memento::Action::Create < Memento::Action::Base
   private
   
   def record_was_changed?
-    record.updated_at > record.created_at
+    record.updated_at > record.created_at rescue false
   end
   
   def build_fake_object
