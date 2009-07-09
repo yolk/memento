@@ -27,11 +27,11 @@ memento needs two tables in your database, one to store "sessions" (sets of stat
   script/generate memento_migration
   rake db:migrate
   
-memento assumes you have an user-model. Every session is owned by an user.
+memento assumes you have a user-model. Every session is owned by a user.
   
 == Configure your models
 
-Then you have to tell every model you want to undo actions on, that it should be watched by memento:
+Then you have to tell every model you want to undo actions on that it should be watched by memento:
 
   class Person < ActiveRecord::Base
     memento_changes
@@ -43,13 +43,13 @@ If you want memento to only take snapshots on specific actions:
 
   memento_changes :update, :destroy
   
-This will take an snapshot only when an instance is updated or destroyed.
+This will take a snapshot only when an instance is updated or destroyed.
 
 By default memento will ignore changes to the :updated_at and :created_at attributes. You can add further attributes to ignore with the :ignore option:
 
   memento_changes :ignore => [:calculated_birthday, :friends_count]
   
-This will ignore changes on the calculated_birthday and the firends_count-attributes. When memento saves an whole instance of your model before it is destroyed, this attributes will not be stored for later recovery. Only ignore attributes you can re-calculate from other data!
+This will ignore changes on the calculated_birthday and the firends_count-attributes. When memento saves a whole instance of your model before it is destroyed, those attributes will not be stored for later recovery. Only ignore attributes you can re-calculate from other data!
 
 == Action!
 
