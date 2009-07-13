@@ -41,9 +41,9 @@ class Memento::Action::Update < Memento::Action::Base
   end
   
   def was_destroyed
-    @state.new_object do |object|
+    new_object do |object|
       object.errors.add(:memento_undo, ActiveSupport::StringInquirer.new("was_destroyed"))
-      object.id = @state.record_id
+      object.id = state.record_id
     end
   end
   

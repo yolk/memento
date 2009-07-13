@@ -34,22 +34,6 @@ class Memento::State < ActiveRecord::Base
     action.fetch?
   end
   
-  def new_object
-    object = record_type.constantize.new
-    yield(object) if block_given?
-    object
-  end
-  
-  def rebuild_object(*skip)
-    skip = skip ? skip.map(&:to_sym) : []
-    new_object do |object|
-      record_data.each do |attribute, value|
-        object.send(:"#{attribute}=", value) unless skip.include?(attribute.to_sym)
-      end
-      yield(object) if block_given?
-    end
-  end
-  
   private
   
   def set_record_data

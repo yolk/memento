@@ -46,25 +46,6 @@ describe Memento::State do
     it "should give back old data on record_data" do
       @state.record_data.should == (@project.attributes_for_memento)
     end
-    
-    it "should give back new unsaved copy of object on new_object" do
-      @state.new_object.should be_kind_of(Project)
-      @state.new_object.name.should be_nil
-      @state.new_object do |object|
-        object.name = "B"
-      end.name.should eql("B")
-    end
-    
-    it "should give back new unsaved copy filled with old data of object on rebuild_object" do
-      @state.rebuild_object.should be_kind_of(Project)
-      @state.rebuild_object.name.should eql("A")
-      @state.rebuild_object(:id).id.should be_nil # skip id
-      @state.rebuild_object.id.should eql(@project.id)
-      @state.rebuild_object do |object|
-        object.name = "B"
-      end.name.should eql("B")
-    end
-    
   end
   
   after do

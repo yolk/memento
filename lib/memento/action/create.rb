@@ -19,8 +19,8 @@ class Memento::Action::Create < Memento::Action::Base
   end
   
   def build_fake_object
-    @state.new_object do |object|
-      object.id = @state.record_id
+    new_object do |object|
+      object.id = state.record_id
     end
   end
   
