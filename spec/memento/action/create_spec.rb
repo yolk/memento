@@ -44,7 +44,6 @@ describe Memento::Action::Create, "when object is created" do
     end
     
     describe "when record was already destroyed" do
-      
       it "should give back fake unsaved record with id set" do
         Project.last.destroy
         @undone = Memento::Session.last.undo
@@ -52,19 +51,6 @@ describe Memento::Action::Create, "when object is created" do
         @undone.first.object.should be_kind_of(Project)
         @undone.first.object.id.should eql(@project.id)
         @undone.first.object.name.should be_nil
-        @undone.first.object.should be_new_record
-        Project.count.should eql(0)
-      end
-    
-      it "should give back fake unsaved record with all data set when destruction was stateed" do
-        Memento.instance.memento(@user) { Project.last.destroy }
-        Memento::State.last.update_attribute(:created_at, 5.minutes.from_now)
-        @undone = Memento::Session.first.undo
-        @undone.size.should eql(1)
-        @undone.first.object.should be_kind_of(Project)
-        @undone.first.object.id.should eql(@project.id)
-        @undone.first.object.name.should eql(@project.name)
-        @undone.first.object.closed_at.should eql(@project.closed_at)
         @undone.first.object.should be_new_record
         Project.count.should eql(0)
       end

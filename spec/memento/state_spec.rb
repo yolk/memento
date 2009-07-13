@@ -65,37 +65,6 @@ describe Memento::State do
       end.name.should eql("B")
     end
     
-    describe "on later_states_on_record_for" do
-      
-      it "should return empty array" do
-        @state.later_states_on_record_for("destroy").should eql([])
-      end
-
-      it "should return filled array when other record of the given action_type exists" do
-        Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => @project )
-        @state.later_states_on_record_for("destroy").map(&:class).should eql([Memento::State])
-        @state.later_states_on_record_for(:"destroy").map(&:id).should eql([2])
-      end
-      
-      it "should return empty array when only records of another action_type exists" do
-        Memento::Session.create!(:user => @user).states.create!(:action_type => "update", :record => @project )
-        @state.later_states_on_record_for("destroy").should eql([])
-      end
-      
-      it "should return empty array when only destroy records of another record exists" do
-        Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create(:name => "B") )
-        @state.later_states_on_record_for("destroy").should eql([])
-      end
-      
-      it "should return empty array when only destroy records older than @tack exist" do
-        state2 = Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => @project )
-        state2.update_attribute(:created_at, 3.minutes.ago)
-        @state.later_states_on_record_for("destroy").should eql([])
-      end
-    end
-    
-    
-    
   end
   
   after do

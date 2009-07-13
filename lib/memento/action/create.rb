@@ -19,12 +19,8 @@ class Memento::Action::Create < Memento::Action::Base
   end
   
   def build_fake_object
-    if destroy_state = @state.later_states_on_record_for(:destroy).last
-      destroy_state.rebuild_object
-    else
-      @state.new_object do |object|
-        object.id = @state.record_id
-      end
+    @state.new_object do |object|
+      object.id = @state.record_id
     end
   end
   

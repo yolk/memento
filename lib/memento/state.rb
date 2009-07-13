@@ -50,14 +50,6 @@ class Memento::State < ActiveRecord::Base
     end
   end
   
-  def later_states_on_record_for(action_type_param)
-    Memento::State.all(:conditions => [
-      "record_id = ? AND record_type = ? AND " + 
-      "action_type = ? AND created_at >= ? AND id != ? ", 
-      record_id, record_type, action_type_param.to_s, created_at, id
-    ])
-  end
-  
   private
   
   def set_record_data
