@@ -16,4 +16,15 @@ class Memento::Action::Destroy < Memento::Action::Base
     end
   end
   
+  private
+  
+  def rebuild_object
+    new_object do |object|
+      state.record_data.each do |attribute, value|
+        object.send(:"#{attribute}=", value)
+      end
+      yield(object) if block_given?
+    end
+  end
+  
 end

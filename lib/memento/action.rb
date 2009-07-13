@@ -1,5 +1,4 @@
 module Memento::Action
-  
   class Base
     def initialize(state)
       @state = state
@@ -35,19 +34,7 @@ module Memento::Action
       yield(object) if block_given?
       object
     end
-    
-    def rebuild_object(*skip)
-      skip = skip ? skip.map(&:to_sym) : []
-      new_object do |object|
-        @state.record_data.each do |attribute, value|
-          next if skip.include?(attribute.to_sym)
-          object.send(:"#{attribute}=", value)
-        end
-        yield(object) if block_given?
-      end
-    end
   end
-  
 end
 
 Dir["#{File.dirname(__FILE__)}/action/*.rb"].each { |action| require action }
