@@ -48,7 +48,7 @@ class Memento::Action::Update < Memento::Action::Base
   end
   
   def was_changed
-    record.errors.add(:memento_undo, ActiveSupport::StringInquirer.new("was_destroyed"))
+    record.errors.add(:memento_undo, ActiveSupport::StringInquirer.new("was_changed"))
     record
   end
   

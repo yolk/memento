@@ -66,7 +66,7 @@ describe Memento::Action::Update do
   
     describe "when record was changed before undo" do
     
-      describe "with mergeable unstateed changes" do
+      describe "with mergeable unrecorded changes" do
         before do
           @project.update_attributes({:notes => "Bla!"})
           @result = Memento::Session.first.undo.first
@@ -86,7 +86,7 @@ describe Memento::Action::Update do
         end
       end
   
-      describe "with mergeable stateed changes" do
+      describe "with mergeable recorded changes" do
         before do
           Memento.instance.memento(@user) do
             @project.update_attributes({:notes => "Bla!"})
@@ -128,7 +128,7 @@ describe Memento::Action::Update do
         end
       end
 
-      describe "with unmergeable unstateed changes" do
+      describe "with unmergeable unrecorded changes" do
         before do
           @project.update_attributes({:name => "P3"})
           @result = Memento::Session.last.undo.first
@@ -137,6 +137,10 @@ describe Memento::Action::Update do
 
         it "should fail" do
           @result.should be_failed
+        end
+        
+        it "should set error" do
+          @result.error.should be_was_changed
         end
     
         it "should return not undone object" do
@@ -147,7 +151,7 @@ describe Memento::Action::Update do
         end
       end
     
-      describe "with unmergeable stateed changes" do
+      describe "with unmergeable recorded changes" do
         before do
           Memento.instance.memento(@user) do
             @project.update_attributes!({:name => "P3"})
