@@ -22,12 +22,12 @@ class Memento::State < ActiveRecord::Base
   end
   
   def record_data
-    @record_data ||= Marshal.load(super)
+    @record_data ||= Marshal.load(read_attribute(:record_data))
   end
   
   def record_data=(data)
     @record_data = nil
-    super(Marshal.dump(data))
+    write_attribute(:record_data, Marshal.dump(data))
   end
   
   def fetch?
