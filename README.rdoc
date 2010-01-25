@@ -82,4 +82,4 @@ Undoing this changes is as simple as calling #undo on an memento-session-instanc
   Memento::Session.first.undo
 
 
-Copyright (c) 2009 Yolk Sebastian Munz & Julia Soergel GbR. See LICENSE for details.
+Copyright (c) 2009-2010 Yolk Sebastian Munz & Julia Soergel GbR. See LICENSE for details.
