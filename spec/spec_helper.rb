@@ -17,7 +17,7 @@ Spec::Runner.configure do |config|
   
 end
 
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
+ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 # catch AR schema statements
 $stdout = StringIO.new
 
