@@ -153,4 +153,17 @@ describe Memento do
     
   end
   
+  context "serializer" do
+    
+    it "should default to yaml" do
+      Memento.serializer.should eql(YAML)
+    end
+    
+    it "should be changeable" do
+      Memento.serializer = Marshal
+      Memento.serializer.should eql(Marshal)
+    end
+    
+  end
+  
 end

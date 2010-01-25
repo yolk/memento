@@ -37,6 +37,9 @@ class Memento
     @ignore = false
   end
   
+  cattr_accessor :serializer
+  self.serializer = YAML
+  
   private
   
   def ignore?
