@@ -9,6 +9,12 @@ module Memento::ActiveRecordMethods
   module ClassMethods
     
     def memento_changes(*action_types)
+      if defined?(@memento_initialized) && @memento_initialized
+        raise "Memento initialized twice. Use memento_changes only once per model"
+      end
+      
+      @memento_initialized = true
+      
       include InstanceMethods
       
       self.memento_options = action_types.last.is_a?(Hash) ? action_types.pop : {}
@@ -20,10 +26,7 @@ module Memento::ActiveRecordMethods
       end
       
       action_types.each do |action_type|
-        callback_exists = send(:"after_#{action_type}_callback_chain").any? do |callback|
-          callback.method.to_sym == :"record_#{action_type}"
-        end
-        send :"after_#{action_type}", :"record_#{action_type}" unless callback_exists
+        send :"after_#{action_type}", :"record_#{action_type}"
       end
       
       has_many :memento_states, :class_name => "Memento::State", :as => :record

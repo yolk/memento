@@ -74,18 +74,18 @@ def shutdown_db
 end
  
 class User < ActiveRecord::Base
-end
+end unless defined?(User)
 
 class Customer < ActiveRecord::Base
   has_many :projects
-end
+end unless defined?(Customer)
 
 class Project < ActiveRecord::Base
   belongs_to :customer
   
   memento_changes :ignore => :ignore_this
-end
+end unless defined?(Project)
 
 class TimestamplessObject < ActiveRecord::Base
   memento_changes
-end
+end unless defined?(TimestamplessObject)
