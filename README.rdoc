@@ -4,7 +4,7 @@ RubyGem/Plugin for undo in Rails/ActiveRecord - covers destroy, update and creat
 
 == Install
 
-memento will only work with Rails 2.3 or above.
+memento will only work with Rails 3.0 and Ruby 1.9.2.
 
 == as a ruby-gem
 
