@@ -40,7 +40,7 @@ describe Memento::Action::Create, "when object is created" do
       undone = Memento::Session.last.undo
       Project.count.should eql(1)
       undone.first.should_not be_success
-      undone.first.error.should be_was_changed
+      undone.first.error.first.should be_was_changed
     end
     
     describe "when record was already destroyed" do

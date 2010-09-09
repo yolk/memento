@@ -13,12 +13,12 @@ describe Memento::State do
   end
   
   it "should require session" do
-    Memento::State.create.errors[:session].should eql("can't be blank")
+    Memento::State.create.errors[:session].should eql(["can't be blank"])
   end
   
   it "should require action_type to be one of Memento::State::RECORD_CAUSES" do
-    Memento::State.create.errors[:action_type].should eql("can't be blank")
-    Memento::State.create(:action_type => "move").errors[:action_type].should eql("is not included in the list")
+    Memento::State.create.errors[:action_type].should eql(["can't be blank"])
+    Memento::State.create(:action_type => "move").errors[:action_type].should eql(["is not included in the list"])
   end
   
   it "should belong to polymorphic record" do
@@ -27,7 +27,7 @@ describe Memento::State do
   end
   
   it "should require record" do
-    Memento::State.create.errors[:record].should eql("can't be blank")
+    Memento::State.create.errors[:record].should eql(["can't be blank"])
   end
   
   

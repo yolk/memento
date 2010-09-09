@@ -23,7 +23,8 @@ class Memento::Result
   end
   
   def error
-    @object.errors[:memento_undo]
+    error = @object.errors[:memento_undo]
+    error.present? ? error : nil
   end
   
   def failed?

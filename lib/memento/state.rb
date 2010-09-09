@@ -27,7 +27,7 @@ class Memento::State < ActiveRecord::Base
   
   def record_data=(data)
     @record_data = nil
-    write_attribute(:record_data, Memento.serializer.dump(data))
+    write_attribute(:record_data, data.is_a?(String) ? data : Memento.serializer.dump(data))
   end
   
   def fetch?

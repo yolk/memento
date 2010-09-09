@@ -2,8 +2,6 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
 class FooController < ActionController::Base
   
-  private
-  
 end
 
 describe Memento::ActionControllerMethods do
@@ -22,7 +20,7 @@ describe Memento::ActionControllerMethods do
   end
   
   it "should add memento-method to ActionController::Base" do
-    FooController.private_instance_methods.should include("memento")
+    FooController.private_instance_methods.map(&:to_sym).should include(:memento)
   end
   
   it "should call memento#memento with user and block" do

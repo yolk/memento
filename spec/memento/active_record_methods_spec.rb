@@ -7,8 +7,8 @@ describe Memento::ActiveRecordMethods do
     setup_data
   end
   
-  it "should declare private methods on Project" do
-    Project.private_instance_methods.should include("record_destroy", "record_update", "record_create")
+  it "should declare protected methods on Project" do
+    Project.private_instance_methods.map(&:to_sym).should include(:record_destroy, :record_update, :record_create)
   end
   
   it "should set hook on create to call Memento" do

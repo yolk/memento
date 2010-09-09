@@ -58,7 +58,7 @@ describe Memento::Action::Update do
       it "should return fake object with error" do
         undone = Memento::Session.last.undo.first
         undone.should_not be_success
-        undone.error.should be_was_destroyed
+        undone.error.first.should be_was_destroyed
         undone.object.class.should eql(Project)
         undone.object.id.should eql(1)
       end
@@ -140,7 +140,7 @@ describe Memento::Action::Update do
         end
         
         it "should set error" do
-          @result.error.should be_was_changed
+          @result.error.first.should be_was_changed
         end
     
         it "should return not undone object" do

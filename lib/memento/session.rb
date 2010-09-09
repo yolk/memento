@@ -20,7 +20,7 @@ class Memento::Session < ActiveRecord::Base
   
   def undo!
     transaction do
-      returning(undo) do |results|
+      undo.tap do |results|
         raise Memento::ErrorOnRewind if results.failed?
       end
     end

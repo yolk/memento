@@ -1,3 +1,5 @@
+require 'active_record'
+
 class Memento
   include Singleton
   
@@ -37,8 +39,13 @@ class Memento
     @ignore = false
   end
   
-  cattr_accessor :serializer
-  self.serializer = YAML
+  def self.serializer=(serializer)
+    @serializer = serializer
+  end
+  
+  def self.serializer
+    @serializer ||= YAML
+  end
   
   private
   

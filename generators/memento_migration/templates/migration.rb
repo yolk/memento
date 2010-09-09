@@ -8,7 +8,7 @@ class MementoMigration < ActiveRecord::Migration
   
     create_table :memento_states do |t|
       t.string :action_type
-      t.binary :record_data, :limit => 1.megabytes
+      t.binary :record_data, :limit => 16777215
       t.references :record, :polymorphic => true
       t.references :session
       t.timestamps

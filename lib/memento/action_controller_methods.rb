@@ -1,8 +1,6 @@
 class Memento
   module ActionControllerMethods
     
-    private
-    
     def memento
       block_result = nil
       memento_session = Memento.instance.memento(current_user) do
@@ -13,6 +11,7 @@ class Memento
       end
       block_result
     end
+    private :memento
   end
 end
 

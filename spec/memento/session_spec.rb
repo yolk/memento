@@ -13,7 +13,7 @@ describe Memento::Session do
   end
   
   it "should require user" do
-    Memento::Session.create.errors[:user].should eql("can't be blank")
+    Memento::Session.create.errors[:user].should eql(["can't be blank"])
   end
   
   it "should have_many states" do

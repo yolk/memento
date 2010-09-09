@@ -2,7 +2,7 @@ require 'rubygems'
 require 'active_support'
 require 'active_record'
 require 'action_controller'
-require 'spec'
+require 'rspec'
 
 # Initialize time_zones from rails
 Time.zone_default = Time.__send__(:get_zone, 'Berlin') || raise("Err")
@@ -12,10 +12,6 @@ ActiveRecord::Base.default_timezone = :utc
 $:.unshift(File.dirname(__FILE__))
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'memento'
-
-Spec::Runner.configure do |config|
-  
-end
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 # catch AR schema statements
@@ -54,7 +50,7 @@ def setup_db
     
     create_table :memento_states do |t|
       t.string :action_type
-      t.binary :record_data, :limit => 1.megabytes
+      t.binary :record_data, :limit => 16777215
       t.references :record, :polymorphic => true
       t.references :session
       t.timestamps

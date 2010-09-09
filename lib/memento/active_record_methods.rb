@@ -53,22 +53,23 @@ module Memento::ActiveRecordMethods
       filter_attributes_for_memento(changes)
     end
     
-    private
-    
     def filter_attributes_for_memento(hash)
       hash.delete_if do |key, value| 
         ignore_attributes_for_memento.include?(key.to_sym)
       end
     end
+    private :filter_attributes_for_memento
     
     def ignore_attributes_for_memento
       Memento::ActiveRecordMethods::IGNORE_ATTRIBUTES + (self.class.memento_options[:ignore] || [])
     end
+    private :ignore_attributes_for_memento
     
     Memento::Action::Base.action_types.each do |action_type|
       define_method :"record_#{action_type}" do
         Memento.instance.add_state(action_type, self)
       end
+      private :"record_#{action_type}"
     end
   end
   
