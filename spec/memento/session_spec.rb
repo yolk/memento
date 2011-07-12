@@ -94,7 +94,7 @@ describe Memento::Session do
       end
     end
   
-    it "should undo states in order of creation (newest first)" do
+    it "should undo states in reverse order of creation (newest first)" do
       @session.undo.map(&:state).map(&:id).should eql([@state2.id, @state1.id])
     end
   end
