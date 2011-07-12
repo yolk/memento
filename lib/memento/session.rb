@@ -1,7 +1,7 @@
 class Memento::Session < ActiveRecord::Base
   set_table_name "memento_sessions"
   
-  has_many :states, :class_name => "Memento::State", :dependent => :delete_all
+  has_many :states, :class_name => "Memento::State", :dependent => :delete_all, :order => "id DESC"
   belongs_to :user
   validates_presence_of :user
   

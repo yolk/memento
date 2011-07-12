@@ -93,6 +93,10 @@ describe Memento::Session do
         lambda{ @session.undo! }.should raise_error(Memento::ErrorOnRewind)
       end
     end
+  
+    it "should undo states in order of creation (newest first)" do
+      @session.undo.map(&:state).map(&:id).should eql([@state2.id, @state1.id])
+    end
   end
   
   describe "with states" do
