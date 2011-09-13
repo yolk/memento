@@ -35,7 +35,7 @@ class Memento::Action::Update < Memento::Action::Base
       values = values.map{|v| v.is_a?(Time) ? v.to_s(:db) : v }
       current_value = record.send(:"#{attribute}")
       current_value = current_value.utc.to_s(:db) if current_value.is_a?(Time)
-      values.include?(current_value) 
+      values.include?(current_value) || (current_value.is_a?(String) && values.include?(current_value.gsub(/\r\n/, "\n")))
     end || record_data.size.zero?
   end
   

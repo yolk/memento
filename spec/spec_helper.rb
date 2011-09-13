@@ -21,7 +21,7 @@ def setup_db
     create_table :projects do |t|
       t.column :name, :string
       t.column :closed_at, :datetime
-      t.column :notes, :string
+      t.column :notes, :text
       t.references :customer
       t.integer :ignore_this
       t.timestamps

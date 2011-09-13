@@ -89,7 +89,7 @@ describe Memento::Action::Update do
       describe "with mergeable recorded changes" do
         before do
           Memento.instance.memento(@user) do
-            @project.update_attributes({:notes => "Bla!"})
+            @project.update_attributes({:notes => "Bla\nBla!"})
           end
           Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
           @result = Memento::Session.first.undo.first
@@ -105,7 +105,7 @@ describe Memento::Action::Update do
           @object.name.should eql("P1")
           @object.customer.should be_nil
           @object.closed_at.to_s.should eql(@time1.to_s)
-          @object.notes.should eql("Bla!")
+          @object.notes.should eql("Bla\nBla!")
         end
     
         describe "when second state is undone" do
