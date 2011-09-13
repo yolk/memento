@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    memento (0.3.2)
+    memento (0.3.3)
       actionpack (>= 3.0.0)
       activerecord (>= 3.0.0)
 
