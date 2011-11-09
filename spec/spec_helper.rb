@@ -4,7 +4,7 @@ require 'action_controller'
 require 'rspec'
 
 # Initialize time_zones from rails
-Time.zone_default = Time.__send__(:get_zone, 'Berlin') || raise("Err")
+Time.zone_default = (Time.respond_to?(:find_zone!) && Time.find_zone!("Berlin")) || Time.__send__(:get_zone, 'Berlin') || raise("Err")
 ActiveRecord::Base.time_zone_aware_attributes = true
 ActiveRecord::Base.default_timezone = :utc
 

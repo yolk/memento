@@ -1,4 +1,5 @@
 require 'active_record'
+require 'active_support/core_ext/class/inheritable_attributes'
 
 class Memento
   include Singleton
