@@ -1,9 +1,13 @@
+require 'active_support/core_ext/class/attribute'
+
 module Memento::ActiveRecordMethods
   
   IGNORE_ATTRIBUTES = [:updated_at, :created_at]
   
   def self.included(base)
-    base.send :extend, ClassMethods
+    base.class_attribute(:memento_options_store, :instance_reader => false, :instance_writer => false)
+    base.memento_options_store = {}
+    base.extend ClassMethods
   end
   
   module ClassMethods
@@ -33,13 +37,13 @@ module Memento::ActiveRecordMethods
     end
     
     def memento_options
-      read_inheritable_attribute(:memento_options) || write_inheritable_attribute(:memento_options,{})
+      self.memento_options_store ||= {}
     end
     
     def memento_options=(options)
       options.symbolize_keys!
       options[:ignore] = [options[:ignore]].flatten.map(&:to_sym) if options[:ignore]
-      write_inheritable_attribute(:memento_options, memento_options.merge(options))
+      self.memento_options_store = memento_options_store.merge(options)
     end
   end
   

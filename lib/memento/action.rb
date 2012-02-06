@@ -1,3 +1,5 @@
+require 'active_support/core_ext/class/attribute'
+
 module Memento::Action
   class Base
     def initialize(state)
@@ -5,6 +7,8 @@ module Memento::Action
     end
     
     attr_reader :state
+    class_attribute :action_types, :instance_reader => false, :instance_writer => false
+    self.action_types = []
     
     def record
       @state.record
@@ -19,12 +23,7 @@ module Memento::Action
     end
     
     def self.inherited(child)
-      action_type = child.name.demodulize.underscore
-      write_inheritable_attribute(:action_types, action_types << action_type)
-    end
-    
-    def self.action_types
-      read_inheritable_attribute(:action_types) || []
+      self.action_types << child.name.demodulize.underscore
     end
     
     private

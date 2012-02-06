@@ -35,6 +35,10 @@ describe Memento::ActiveRecordMethods do
     }
   end
   
+  it "should set memento_options" do
+    Project.memento_options.should eql({:ignore=>[:ignore_this]})
+  end
+  
   it "should define changes_for_memento and ignore attributes given by options" do
     project = Project.create!(:name => "Project X")
     project.name = "A Project"
