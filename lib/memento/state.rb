@@ -1,5 +1,5 @@
 class Memento::State < ActiveRecord::Base
-  set_table_name "memento_states"
+  self.table_name = "memento_states"
   
   belongs_to :session, :class_name => "Memento::Session"
   belongs_to :record, :polymorphic => true
