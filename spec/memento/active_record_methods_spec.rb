@@ -20,7 +20,7 @@ describe Memento::ActiveRecordMethods do
   it "should set hook on update to call Memento" do
     project = Project.create!(:name => "Project X")
     Memento.instance.should_receive(:add_state).once().with("update", project)
-    project.update_attribute(:name, "Project XY")
+    project.update_attributes(:name => "Project XY")
   end
   
   it "should set hook on destroy to call Memento" do
@@ -52,11 +52,11 @@ describe Memento::ActiveRecordMethods do
   it "should define has_many association to memento_states" do
     project = Project.create!(:name => "Project X")
     project.memento_states.should be_empty
-    Memento.instance.memento(@user) { project.update_attribute(:name, "Project Y") }
+    Memento.instance.memento(@user) { project.update_attributes(:name => "Project Y") }
     project.memento_states.count.should eql(1)
-    Memento.instance.memento(@user) { project.update_attribute(:name, "Project Y") }
+    Memento.instance.memento(@user) { project.update_attributes(:name => "Project Y") }
     project.memento_states.count.should eql(1)
-    Memento.instance.memento(@user) { Project.create!.update_attribute(:name, "Project X") }
+    Memento.instance.memento(@user) { Project.create!.update_attributes(:name => "Project X") }
     project.memento_states.count.should eql(1)
     Project.last.memento_states.count.should eql(2)
     Memento::State.count.should eql(3)

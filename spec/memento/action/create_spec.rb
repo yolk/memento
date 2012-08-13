@@ -36,7 +36,7 @@ describe Memento::Action::Create, "when object is created" do
     end
 
     it "should not undo the creatio if object was modified" do
-      Project.last.update_attribute(:created_at, 1.minute.ago)
+      Project.last.update_attributes(:created_at => 1.minute.ago)
       undone = Memento::Session.last.undo
       Project.count.should eql(1)
       undone.first.should_not be_success

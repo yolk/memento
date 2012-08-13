@@ -26,7 +26,7 @@ describe Memento::ActionControllerMethods do
   it "should call memento#memento with user and block" do
     project = Project.create!
     @controller.send(:memento) do
-      project.update_attribute(:name, "P7")
+      project.update_attributes(:name => "P7")
     end
     project.reload.name.should eql("P7")
     project.memento_states.count.should eql(1)
@@ -34,7 +34,7 @@ describe Memento::ActionControllerMethods do
   end
   
   it "should set header X-MementoSessionId" do
-    @controller.send(:memento) { Project.create!.update_attribute(:name, "P7") }
+    @controller.send(:memento) { Project.create!.update_attributes(:name => "P7") }
     @headers.should == {'X-Memento-Session-Id' => Memento::Session.last.id.to_s }
   end
   

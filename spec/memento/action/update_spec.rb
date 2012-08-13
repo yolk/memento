@@ -91,7 +91,7 @@ describe Memento::Action::Update do
           Memento.instance.memento(@user) do
             @project.update_attributes({:notes => "Bla\nBla!"})
           end
-          Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
+          Memento::State.last.update_attributes(:created_at => 1.minute.from_now)
           @result = Memento::Session.first.undo.first
           @object = @result.object
         end
@@ -156,7 +156,7 @@ describe Memento::Action::Update do
           Memento.instance.memento(@user) do
             @project.update_attributes!({:name => "P3"})
           end
-          Memento::State.last.update_attribute(:created_at, 1.minute.from_now)
+          Memento::State.last.update_attributes(:created_at => 1.minute.from_now)
           @result = Memento::Session.first.undo.first
           @object = @result.object
         end

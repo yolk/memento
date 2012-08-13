@@ -12,7 +12,8 @@ class Memento::Action::Destroy < Memento::Action::Base
         object.id = nil
         object.save!
       end
-      state.update_attribute(:record, object)
+      state.record = object
+      state.save
     end
   end
   
