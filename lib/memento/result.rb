@@ -1,37 +1,38 @@
-class Memento::ResultArray < Array
+module Memento
+  class ResultArray < Array
+    def errors
+      self.find_all{ |result| result.failed? }
+    end
 
-  def errors
-    self.find_all{ |result| result.failed? }
+    def failed?
+      self.any?{ |result| result.failed? }
+    end
+
+    def success?
+      !failed?
+    end
+
   end
 
-  def failed?
-    self.any?{ |result| result.failed? }
-  end
+  class Result
 
-  def success?
-    !failed?
-  end
+    attr_reader :object, :state
 
-end
+    def initialize(object, state)
+      @object, @state = object, state
+    end
 
-class Memento::Result
+    def error
+      error = @object.errors[:memento_undo]
+      error.present? ? error : nil
+    end
 
-  attr_reader :object, :state
+    def failed?
+      !!error
+    end
 
-  def initialize(object, state)
-    @object, @state = object, state
-  end
-
-  def error
-    error = @object.errors[:memento_undo]
-    error.present? ? error : nil
-  end
-
-  def failed?
-    !!error
-  end
-
-  def success?
-    !failed?
+    def success?
+      !failed?
+    end
   end
 end

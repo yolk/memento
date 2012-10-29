@@ -10,8 +10,7 @@ describe Memento do
     shutdown_db
   end
 
-  it "should be a singleton" do
-    Memento.instance.should be_kind_of(Singleton)
+  it "should be (like) a singleton" do
     Memento.instance.should eql(Memento.instance)
     lambda{ Memento.new }.should raise_error(NoMethodError)
   end

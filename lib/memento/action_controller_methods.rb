@@ -1,4 +1,4 @@
-class Memento
+module Memento
   module ActionControllerMethods
 
     def memento

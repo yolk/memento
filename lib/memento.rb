@@ -1,60 +1,67 @@
 require 'active_record'
 
-class Memento
-  include Singleton
+module Memento
 
   class ErrorOnRewind < StandardError;end
 
-  def memento(user)
-    start(user)
-    yield
-    !@session.states.count.zero? && @session rescue false
-  ensure
-    stop
-  end
+  class << self
 
-  def start(user_or_id)
-    user = user_or_id.is_a?(User) ? user_or_id : User.find_by_id(user_or_id)
-    @session = user ? Memento::Session.new(:user => user) : nil
-  end
+    # For backwards compatibility (was a Singleton)
+    def instance
+      self
+    end
 
-  def stop
-    @session.destroy if @session && @session.states.count.zero?
-    @session = nil
-  end
+    def memento(user_or_id)
+      start(user_or_id)
+      yield
+      !@session.states.count.zero? && @session rescue false
+    ensure
+      stop
+    end
 
-  def add_state(action_type, record)
-    return unless save_session
-    @session.add_state(action_type, record)
-  end
+    def start(user_or_id)
+      user = user_or_id.is_a?(User) ? user_or_id : User.find_by_id(user_or_id)
+      @session = user ? Memento::Session.new(:user => user) : nil
+    end
 
-  def active?
-    !!(defined?(@session) && @session) && !ignore?
-  end
+    def stop
+      @session.destroy if @session && @session.states.count.zero?
+      @session = nil
+    end
 
-  def ignore
-    @ignore = true
-    yield
-  ensure
-    @ignore = false
-  end
+    def add_state(action_type, record)
+      return unless save_session
+      @session.add_state(action_type, record)
+    end
 
-  def self.serializer=(serializer)
-    @serializer = serializer
-  end
+    def active?
+      !!(defined?(@session) && @session) && !ignore?
+    end
 
-  def self.serializer
-    @serializer ||= YAML
-  end
+    def ignore
+      @ignore = true
+      yield
+    ensure
+      @ignore = false
+    end
 
-  private
+    def serializer=(serializer)
+      @serializer = serializer
+    end
 
-  def ignore?
-    defined?(@ignore) && @ignore
-  end
+    def serializer
+      @serializer ||= YAML
+    end
 
-  def save_session
-    active? && (!@session.changed? || @session.save)
+    private
+
+    def ignore?
+      !!@ignore
+    end
+
+    def save_session
+      active? && (!@session.changed? || @session.save)
+    end
   end
 end
 
