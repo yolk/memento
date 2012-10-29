@@ -17,7 +17,7 @@ describe Memento::Action::Update do
   describe "when object gets updated" do
 
     before do
-      Memento.instance.memento(@user) do
+      Memento.memento(@user) do
         @project.update_attributes(:name => "P2", :closed_at => @time2, :customer => @customer, :notes => "Bla bla")
       end
     end
@@ -88,7 +88,7 @@ describe Memento::Action::Update do
 
       describe "with mergeable recorded changes" do
         before do
-          Memento.instance.memento(@user) do
+          Memento.memento(@user) do
             @project.update_attributes({:notes => "Bla\nBla!"})
           end
           Memento::State.last.update_attributes(:created_at => 1.minute.from_now)
@@ -153,7 +153,7 @@ describe Memento::Action::Update do
 
       describe "with unmergeable recorded changes" do
         before do
-          Memento.instance.memento(@user) do
+          Memento.memento(@user) do
             @project.update_attributes!({:name => "P3"})
           end
           Memento::State.last.update_attributes(:created_at => 1.minute.from_now)
@@ -198,7 +198,7 @@ describe Memento::Action::Update do
   describe "when object gets updated with no changes" do
 
     before do
-      Memento.instance.memento(@user) do
+      Memento.memento(@user) do
         @project.update_attributes(:name => "P1", :customer => nil, :notes => "Bla bla")
       end
     end

@@ -71,7 +71,7 @@ module Memento::ActiveRecordMethods
 
     Memento::Action::Base.action_types.each do |action_type|
       define_method :"record_#{action_type}" do
-        Memento.instance.add_state(action_type, self)
+        Memento.add_state(action_type, self)
       end
       private :"record_#{action_type}"
     end

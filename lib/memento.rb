@@ -14,35 +14,35 @@ module Memento
     def memento(user_or_id)
       start(user_or_id)
       yield
-      !@session.states.count.zero? && @session rescue false
+      session && !session.new_record? && session.states.any? ? session : false
     ensure
       stop
     end
 
     def start(user_or_id)
       user = user_or_id.is_a?(User) ? user_or_id : User.find_by_id(user_or_id)
-      @session = user ? Memento::Session.new(:user => user) : nil
+      self.session = user ? Memento::Session.new(:user => user) : nil
     end
 
     def stop
-      @session.destroy if @session && @session.states.count.zero?
-      @session = nil
+      session.destroy if session && session.states.count.zero?
+      self.session = nil
     end
 
     def add_state(action_type, record)
       return unless save_session
-      @session.add_state(action_type, record)
+      session.add_state(action_type, record)
     end
 
     def active?
-      !!(defined?(@session) && @session) && !ignore?
+      !!session && !ignore?
     end
 
     def ignore
-      @ignore = true
+      Thread.current[:memento_ignore] = true
       yield
     ensure
-      @ignore = false
+      Thread.current[:memento_ignore] = false
     end
 
     def serializer=(serializer)
@@ -55,12 +55,20 @@ module Memento
 
     private
 
+    def session
+      Thread.current[:memento_session]
+    end
+
+    def session=(session)
+      Thread.current[:memento_session] = session
+    end
+
     def ignore?
-      !!@ignore
+      !!Thread.current[:memento_ignore]
     end
 
     def save_session
-      active? && (!@session.changed? || @session.save)
+      active? && (!session.changed? || session.save)
     end
   end
 end

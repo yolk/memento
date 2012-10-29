@@ -4,9 +4,9 @@ describe Memento::Action::Create, "when object is created" do
   before do
     setup_db
     setup_data
-    Memento.instance.start(@user)
+    Memento.start(@user)
     @project = Project.create!(:name => "P1", :closed_at => 3.days.ago).reload
-    Memento.instance.stop
+    Memento.stop
   end
 
   after do
@@ -65,7 +65,7 @@ describe Memento::Action::Create, "when object without timestamp is created" do
   before do
     setup_db
     setup_data
-    Memento.instance.memento(@user) do
+    Memento.memento(@user) do
       @obj = TimestamplessObject.create!(:name => "O1").reload
     end
   end

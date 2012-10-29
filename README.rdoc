@@ -69,7 +69,7 @@ This assumes there is an method called "current_user" in your controllers. It wi
 
 If you want memento to watch changes outside of your controllers (for example inside the console) you can use:
 
-  Memento.instance.memento(user) do
+  Memento.memento(user) do
     Person.create!(:name => "Blah")
   end
 
