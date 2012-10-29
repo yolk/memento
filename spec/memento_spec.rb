@@ -79,27 +79,27 @@ describe Memento do
 
     it "should record inside of block and stop after" do
       Memento.should_not be_active
-      Memento.memento(@user) do
+      Memento(@user) do
         Memento.should be_active
       end
       Memento.should_not be_active
     end
 
     it "should give back session when states created" do
-      Memento.memento(@user) do
+      Memento(@user) do
         Project.create!
       end.should be_a(Memento::Session)
     end
 
     it "should give back false when no states created" do
-      Memento.memento(@user) do
+      Memento(@user) do
         1 + 1
       end.should be_false
     end
 
     it "should raise error in block and stop session" do
       lambda {
-        Memento.memento(@user) do
+        Memento(@user) do
           raise StandardError
         end.should be_nil
       }.should raise_error(StandardError)

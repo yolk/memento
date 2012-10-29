@@ -65,7 +65,7 @@ describe Memento::Action::Create, "when object without timestamp is created" do
   before do
     setup_db
     setup_data
-    Memento.memento(@user) do
+    Memento(@user) do
       @obj = TimestamplessObject.create!(:name => "O1").reload
     end
   end

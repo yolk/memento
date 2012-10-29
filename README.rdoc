@@ -65,11 +65,11 @@ You have to wrap every action block you want memento to track in your controller
   end
   Memento::Session.count # => 1
 
-This assumes there is an method called "current_user" in your controllers. It will set the HTTP-Header 'X-Memento-Session-Id' on your response.
+This assumes there is an method called "current_user" in your controllers. It will also set the HTTP-Header 'X-Memento-Session-Id' on your response.
 
 If you want memento to watch changes outside of your controllers (for example inside the console) you can use:
 
-  Memento.memento(user) do
+  Memento(user) do
     Person.create!(:name => "Blah")
   end
 

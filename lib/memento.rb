@@ -11,7 +11,7 @@ module Memento
       self
     end
 
-    def memento(user_or_id)
+    def watch(user_or_id)
       start(user_or_id)
       yield
       session && !session.new_record? && session.states.any? ? session : false
@@ -73,6 +73,9 @@ module Memento
   end
 end
 
+def Memento(user_or_id, &block)
+  Memento.watch(user_or_id, &block)
+end
 require 'memento/result'
 require 'memento/action'
 require 'memento/active_record_methods'
