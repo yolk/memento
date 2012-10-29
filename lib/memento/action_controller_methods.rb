@@ -1,6 +1,6 @@
 class Memento
   module ActionControllerMethods
-    
+
     def memento
       block_result = nil
       memento_session = Memento.instance.memento(current_user) do

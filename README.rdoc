@@ -26,9 +26,9 @@ memento needs two tables in your database, one to store "sessions" (sets of stat
 
   script/generate memento_migration
   rake db:migrate
-  
+
 memento assumes you have a user-model. Every session is owned by a user.
-  
+
 == Configure your models
 
 Then you have to tell every model you want to undo actions on that it should be watched by memento:
@@ -42,13 +42,13 @@ This will tell memento to create snapshots of the model when an new instance is 
 If you want memento to only take snapshots on specific actions:
 
   memento_changes :update, :destroy
-  
+
 This will take a snapshot only when an instance is updated or destroyed.
 
 By default memento will ignore changes to the :updated_at and :created_at attributes. You can add further attributes to ignore with the :ignore option:
 
   memento_changes :ignore => [:calculated_birthday, :friends_count]
-  
+
 This will ignore changes on the calculated_birthday and the firends_count-attributes. When memento saves a whole instance of your model before it is destroyed, those attributes will not be stored for later recovery. Only ignore attributes you can re-calculate from other data!
 
 == Action!
@@ -57,14 +57,14 @@ When you perform any of the configured actions on your model in isolation in you
 
   Person.create!(:name => "Blah")
   Memento::Session.count # => 0
-  
+
 You have to wrap every action block you want memento to track in your controller with the memento-method:
 
   memento do
     Person.create!(:name => "Blah")
   end
   Memento::Session.count # => 1
-  
+
 This assumes there is an method called "current_user" in your controllers. It will set the HTTP-Header 'X-Memento-Session-Id' on your response.
 
 If you want memento to watch changes outside of your controllers (for example inside the console) you can use:
@@ -72,7 +72,7 @@ If you want memento to watch changes outside of your controllers (for example in
   Memento.instance.memento(user) do
     Person.create!(:name => "Blah")
   end
-  
+
 Where the variable user is assumed to hold an instance of User.
 
 == Undo!

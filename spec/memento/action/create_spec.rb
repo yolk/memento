@@ -8,28 +8,28 @@ describe Memento::Action::Create, "when object is created" do
     @project = Project.create!(:name => "P1", :closed_at => 3.days.ago).reload
     Memento.instance.stop
   end
-  
+
   after do
     shutdown_db
   end
-    
+
   it "should create memento_state for ar-object with no data" do
     Memento::State.count.should eql(1)
     Memento::State.first.action_type.should eql("create")
     Memento::State.first.record.should eql(@project) # it was destroyed, remember?
     Memento::State.first.reload.record_data.should eql(nil)
   end
-  
+
   it "should create object" do
     Project.find_by_id(@project.id).should_not be_nil
     Project.count.should eql(1)
   end
-  
+
   it "should allow undoing the creation" do
     Memento::Session.last.undo
     Project.count.should eql(0)
   end
-  
+
   describe "when undoing the creation" do
     it "should give back undone_object" do
       Memento::Session.last.undo.map{|e| e.object.class }.should eql([Project])
@@ -42,7 +42,7 @@ describe Memento::Action::Create, "when object is created" do
       undone.first.should_not be_success
       undone.first.error.first.should be_was_changed
     end
-    
+
     describe "when record was already destroyed" do
       it "should give back fake unsaved record with id set" do
         Project.last.destroy
@@ -56,9 +56,9 @@ describe Memento::Action::Create, "when object is created" do
       end
     end
   end
-  
-  
-  
+
+
+
 end
 
 describe Memento::Action::Create, "when object without timestamp is created" do
@@ -69,11 +69,11 @@ describe Memento::Action::Create, "when object without timestamp is created" do
       @obj = TimestamplessObject.create!(:name => "O1").reload
     end
   end
-  
+
   after do
     shutdown_db
   end
-  
+
   describe "when undoing the creation" do
     it "should give back undone_object" do
       Memento::Session.last.undo.map{|e| e.object.class }.should eql([TimestamplessObject])

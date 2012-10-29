@@ -26,27 +26,27 @@ def setup_db
       t.integer :ignore_this
       t.timestamps
     end
-    
+
     create_table :users do |t|
       t.column :email, :string
       t.column :name, :string
       t.timestamps
     end
-    
+
     create_table :customers do |t|
       t.column :name, :string
       t.timestamps
     end
-    
+
     create_table :timestampless_objects do |t|
       t.column :name, :string
     end
-    
+
     create_table :memento_sessions do |t|
       t.references :user
       t.timestamps
     end
-    
+
     create_table :memento_states do |t|
       t.string :action_type
       t.binary :record_data, :limit => 16777215
@@ -54,20 +54,20 @@ def setup_db
       t.references :session
       t.timestamps
     end
-    
+
   end
 end
 
 def setup_data
   @user = User.create(:name => "MyUser")
 end
- 
+
 def shutdown_db
   ActiveRecord::Base.connection.tables.each do |table|
     ActiveRecord::Base.connection.drop_table(table)
   end
 end
- 
+
 class User < ActiveRecord::Base
 end unless defined?(User)
 
@@ -77,7 +77,7 @@ end unless defined?(Customer)
 
 class Project < ActiveRecord::Base
   belongs_to :customer
-  
+
   memento_changes :ignore => :ignore_this
 end unless defined?(Project)
 

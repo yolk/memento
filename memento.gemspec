@@ -11,12 +11,12 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/yolk/memento}
   s.summary = %q{Undo for Rails/ActiveRecord - covers destroy, update and create}
   s.description = %q{Undo for Rails/ActiveRecord - covers destroy, update and create}
-  
+
   s.files = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  
+
   s.add_dependency 'activerecord',        '~> 3.2.5'
   s.add_dependency 'actionpack',          '~> 3.2.5'
 
