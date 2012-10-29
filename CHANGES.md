@@ -1,6 +1,15 @@
 ### dev
 
-[full changelog](http://github.com/yolk/valvat/compare/v0.3.7...master)
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.0...master)
+
+### 0.4.0 / 2012-10-29
+
+[full changelog](http://github.com/yolk/valvat/compare/v0.3.7...v0.4.0)
+
+* Memento is a Module now, not a Singleton: Use Memento directly and not Memento.instance
+* Memento module is threadsafe now
+* Changed main api: instead of Memento.memento() use Memento.watch() or Memento()
+* Some code cleanup
 
 ### 0.3.7 / 2012-08-13
 
