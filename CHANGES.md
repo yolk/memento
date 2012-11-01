@@ -1,6 +1,10 @@
 ### dev
 
-[full changelog](http://github.com/yolk/valvat/compare/v0.4.0...master)
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.1...master)
+
+### 0.4.1 / 2012-11-01
+
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.0...v0.4.1)
 
 * Prevent all mass assignment to Memento::Session and Memento::State
 
