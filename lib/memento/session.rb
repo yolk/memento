@@ -4,6 +4,9 @@ module Memento
 
     has_many :states, :class_name => "Memento::State", :dependent => :delete_all, :order => "id DESC"
     belongs_to :user
+
+    attr_accessible nil
+
     validates_presence_of :user
 
     def add_state(action_type, record)

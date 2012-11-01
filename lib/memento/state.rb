@@ -5,6 +5,8 @@ module Memento
     belongs_to :session, :class_name => "Memento::Session"
     belongs_to :record, :polymorphic => true
 
+    attr_accessible nil
+
     validates_presence_of :session
     validates_presence_of :record
     validates_presence_of :action_type
@@ -13,7 +15,9 @@ module Memento
     before_create :set_record_data
 
     def self.store(action_type, record)
-      self.new(:action_type => action_type.to_s, :record => record) do |state|
+      new do |state|
+        state.action_type = action_type.to_s
+        state.record = record
         state.save if state.fetch?
       end
     end

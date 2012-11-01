@@ -5,7 +5,7 @@ describe Memento::Session do
   before do
     setup_db
     setup_data
-    @session = Memento::Session.create(:user => @user)
+    @session = Memento::Session.create({:user => @user}, :without_protection => true)
   end
 
   it "should belong to user" do
@@ -18,15 +18,23 @@ describe Memento::Session do
 
   it "should have_many states" do
     @session.states.should eql([])
-    @session.states.create!(:action_type => "destroy", :record => Project.create!)
+    @session.states.create!({:action_type => "destroy", :record => Project.create!}, :without_protection => true)
     @session.states.count.should eql(1)
+  end
+
+  it "should disallow all mass assignment" do
+    Memento::Session.accessible_attributes.deny?("id").should eql(true)
+    Memento::Session.accessible_attributes.deny?("created_at").should eql(true)
+    Memento::Session.accessible_attributes.deny?("updated_at").should eql(true)
+    Memento::Session.accessible_attributes.deny?("user_id").should eql(true)
+    Memento::Session.accessible_attributes.deny?("user").should eql(true)
   end
 
   context "undo" do
     before do
-      @state1 = @session.states.create!(:action_type => "update", :record => @p1 = Project.create!)
-      @other = Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create!)
-      @state2 = @session.states.create!(:action_type => "update", :record => @p2 = Project.create!)
+      @state1 = @session.states.create!({:action_type => "update", :record => @p1 = Project.create!}, :without_protection => true)
+      @other = Memento::Session.create!({:user => @user}, :without_protection => true).states.create!({:action_type => "destroy", :record => Project.create!}, :without_protection => true)
+      @state2 = @session.states.create!({:action_type => "update", :record => @p2 = Project.create!}, :without_protection => true)
     end
 
     describe "and all states succeed" do
@@ -47,9 +55,9 @@ describe Memento::Session do
 
     describe "and all states fail" do
       before do
-        @state1.update_attributes(:record_data => {:name => ["A", "B"]})
+        @state1.update_attributes({:record_data => {:name => ["A", "B"]}}, :without_protection => true)
         @p1.update_attributes(:name => "C")
-        @state2.update_attributes(:record_data => {:name => ["A", "B"]})
+        @state2.update_attributes({:record_data => {:name => ["A", "B"]}}, :without_protection => true)
         @p2.update_attributes(:name => "C")
       end
 
@@ -70,7 +78,7 @@ describe Memento::Session do
 
     describe "and some states succeed, some fail" do
       before do
-        @state1.update_attributes(:record_data => {:name => ["A", "B"]})
+        @state1.update_attributes({:record_data => {:name => ["A", "B"]}}, :without_protection => true)
         @p1.update_attributes(:name => "C")
       end
 
@@ -101,9 +109,9 @@ describe Memento::Session do
 
   describe "with states" do
     before do
-      @session.states.create!(:action_type => "destroy", :record => Project.create!)
-      Memento::Session.create!(:user => @user).states.create!(:action_type => "destroy", :record => Project.create!)
-      @state2 = @session.states.create!(:action_type => "update", :record => Project.create!)
+      @session.states.create!({:action_type => "destroy", :record => Project.create!}, :without_protection => true)
+      Memento::Session.create!({:user => @user}, :without_protection => true).states.create!({:action_type => "destroy", :record => Project.create!}, :without_protection => true)
+      @state2 = @session.states.create!({:action_type => "update", :record => Project.create!}, :without_protection => true)
     end
 
     it "should destroy all states when destroyed" do
