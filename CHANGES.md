@@ -1,6 +1,12 @@
 ### dev
 
-[full changelog](http://github.com/yolk/valvat/compare/v0.4.1...master)
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.2...master)
+
+### 0.4.2 / 2013-07-19
+
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.1...v0.4.2)
+
+* Replaced find_by_* calls for compatibility with ActiveRecord 4.0
 
 ### 0.4.1 / 2012-11-01
 
