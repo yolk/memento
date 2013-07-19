@@ -4,8 +4,8 @@ describe Memento::Result do
 
   describe "when initalized with valid object" do
     before do
-      @object = mock("object", :errors => {})
-      @state = mock("state1")
+      @object = double("object", :errors => {})
+      @state = double("state1")
       @result = Memento::Result.new(@object, @state)
     end
 
@@ -29,8 +29,8 @@ describe Memento::Result do
 
   describe "when initalized with object with errors" do
     before do
-      @object = mock("object", :errors => {:memento_undo => "123"})
-      @result = Memento::Result.new(@object, mock("state1"))
+      @object = double("object", :errors => {:memento_undo => "123"})
+      @result = Memento::Result.new(@object, double("state1"))
     end
 
     it "should have an object attribute" do
@@ -66,9 +66,9 @@ describe Memento::ResultArray do
 
   describe "when Memento::Result without errors added" do
     before do
-      @object = mock("object", :errors => {:memento_undo => "123"})
-      @results << Memento::Result.new(mock("object2", :errors => {}), mock("state1"))
-      @results << (@with_error = Memento::Result.new(@object, mock("state2")))
+      @object = double("object", :errors => {:memento_undo => "123"})
+      @results << Memento::Result.new(double("object2", :errors => {}), double("state1"))
+      @results << (@with_error = Memento::Result.new(@object, double("state2")))
     end
 
     it "should have two entrys" do

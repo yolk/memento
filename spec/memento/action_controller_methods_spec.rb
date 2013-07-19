@@ -10,9 +10,9 @@ describe Memento::ActionControllerMethods do
     setup_db
     setup_data
     @controller = FooController.new
-    @controller.stub!(:current_user).and_return(@user)
+    @controller.stub(:current_user => @user)
     @headers = {}
-    @controller.stub!(:response).and_return(mock("response", :headers => @headers))
+    @controller.stub_chain(:response, :headers => @headers)
   end
 
   after do
