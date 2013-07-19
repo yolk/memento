@@ -22,7 +22,7 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
   end
 
   it "should destroy object" do
-    Project.find_by_id(@project.id).should be_nil
+    Project.where(:id => @project.id).first.should be_nil
     Project.count.should be_zero
   end
 

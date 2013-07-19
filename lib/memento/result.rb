@@ -1,11 +1,11 @@
 module Memento
   class ResultArray < Array
     def errors
-      self.find_all{ |result| result.failed? }
+      find_all{ |result| result.failed? }
     end
 
     def failed?
-      self.any?{ |result| result.failed? }
+      any?{ |result| result.failed? }
     end
 
     def success?

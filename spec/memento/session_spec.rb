@@ -49,7 +49,7 @@ describe Memento::Session do
 
       it "should remove itself" do
         @session.undo
-        Memento::Session.find_by_id(@session.id).should be_nil
+        Memento::Session.where(:id => @session.id).first.should be_nil
       end
     end
 

@@ -21,7 +21,7 @@ describe Memento::Action::Create, "when object is created" do
   end
 
   it "should create object" do
-    Project.find_by_id(@project.id).should_not be_nil
+    Project.where(:id => @project.id).first.should_not be_nil
     Project.count.should eql(1)
   end
 
