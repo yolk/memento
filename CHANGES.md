@@ -1,6 +1,12 @@
 ### dev
 
-[full changelog](http://github.com/yolk/valvat/compare/v0.4.2...master)
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.3...master)
+
+### 0.4.3 / 2014-04-07
+
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.2...v0.4.3)
+
+* Full Rails 4 compatibility
 
 ### 0.4.2 / 2013-07-19
 
