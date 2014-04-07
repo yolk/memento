@@ -1,10 +1,13 @@
 require 'active_support'
+require 'active_support/time'
 require 'active_record'
 require 'action_controller'
 require 'rspec'
 
+I18n.enforce_available_locales = false
+
 # Initialize time_zones from rails
-Time.zone_default = (Time.respond_to?(:find_zone!) && Time.find_zone!("Berlin")) || Time.__send__(:get_zone, 'Berlin') || raise("Err")
+Time.zone = "Berlin"
 ActiveRecord::Base.time_zone_aware_attributes = true
 ActiveRecord::Base.default_timezone = :utc
 

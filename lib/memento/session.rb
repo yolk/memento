@@ -2,10 +2,11 @@ module Memento
   class Session < ActiveRecord::Base
     self.table_name = "memento_sessions"
 
-    has_many :states, :class_name => "Memento::State", :dependent => :delete_all, :order => "id DESC"
+    has_many :states, -> { order "id DESC" },
+             :class_name => "Memento::State", :dependent => :delete_all
     belongs_to :user
 
-    attr_accessible nil
+    # attr_accessible nil
 
     validates_presence_of :user
 

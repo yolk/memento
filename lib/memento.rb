@@ -21,7 +21,7 @@ module Memento
 
     def start(user_or_id)
       user = user_or_id.is_a?(User) ? user_or_id : User.where(:id => user_or_id).first
-      self.session = user ? Memento::Session.new({:user => user}, :without_protection => true) : nil
+      self.session = user ? Memento::Session.new(:user => user) : nil
     end
 
     def stop

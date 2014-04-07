@@ -5,7 +5,7 @@ module Memento
     belongs_to :session, :class_name => "Memento::Session"
     belongs_to :record, :polymorphic => true
 
-    attr_accessible nil
+    # attr_accessible nil
 
     validates_presence_of :session
     validates_presence_of :record
