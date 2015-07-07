@@ -27,18 +27,18 @@ def setup_db
       t.column :notes, :text
       t.references :customer
       t.integer :ignore_this
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :users do |t|
       t.column :email, :string
       t.column :name, :string
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :customers do |t|
       t.column :name, :string
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :timestampless_objects do |t|
@@ -47,7 +47,7 @@ def setup_db
 
     create_table :memento_sessions do |t|
       t.references :user
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :memento_states do |t|
@@ -55,7 +55,7 @@ def setup_db
       t.binary :record_data, :limit => 16777215
       t.references :record, :polymorphic => true
       t.references :session
-      t.timestamps
+      t.timestamps null: false
     end
 
   end
