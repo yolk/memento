@@ -4,4 +4,5 @@ coverage
 rdoc
 pkg
 .rvmrc
+.ruby-version
 Gemfile.lock
