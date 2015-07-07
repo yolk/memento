@@ -1,9 +1,9 @@
 class MementoMigration < ActiveRecord::Migration
 
-  def self.up
+  def change
     create_table :memento_sessions do |t|
       t.references :user
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :memento_states do |t|
@@ -11,13 +11,8 @@ class MementoMigration < ActiveRecord::Migration
       t.binary :record_data, :limit => 16777215
       t.references :record, :polymorphic => true
       t.references :session
-      t.timestamps
+      t.timestamps null: false
     end
-  end
-
-  def self.down
-    drop_table :memento_states
-    drop_table :memento_sessions
   end
 
 end
