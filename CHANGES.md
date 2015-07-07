@@ -2,6 +2,8 @@
 
 [full changelog](http://github.com/yolk/valvat/compare/v0.4.3...master)
 
+* Fixed generators for Rails 4
+
 ### 0.4.3 / 2014-04-07
 
 [full changelog](http://github.com/yolk/valvat/compare/v0.4.2...v0.4.3)
