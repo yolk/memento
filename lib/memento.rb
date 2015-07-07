@@ -76,6 +76,7 @@ end
 def Memento(user_or_id, &block)
   Memento.watch(user_or_id, &block)
 end
+
 require 'memento/railtie'
 require 'memento/result'
 require 'memento/action'
