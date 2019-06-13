@@ -53,6 +53,10 @@ module Memento
       @serializer ||= YAML
     end
 
+    def ignore?
+      !!Thread.current[:memento_ignore]
+    end
+
     private
 
     def session
@@ -61,10 +65,6 @@ module Memento
 
     def session=(session)
       Thread.current[:memento_session] = session
-    end
-
-    def ignore?
-      !!Thread.current[:memento_ignore]
     end
 
     def save_session

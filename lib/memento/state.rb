@@ -12,13 +12,16 @@ module Memento
     validates_presence_of :action_type
     validates_inclusion_of :action_type, :in => Memento::Action::Base.action_types, :allow_blank => true
 
-    before_create :set_record_data
+    # before_create :set_record_data
 
     def self.store(action_type, record)
       new do |state|
         state.action_type = action_type.to_s
         state.record = record
-        state.save if state.fetch?
+        if state.fetch?
+          state.set_record_data
+          state.save
+        end
       end
     end
 
@@ -27,7 +30,7 @@ module Memento
     end
 
     def record_data
-      @record_data ||= Memento.serializer.load(read_attribute(:record_data))
+      @record_data ||= read_attribute(:record_data) ? Memento.serializer.load(read_attribute(:record_data)) : {}
     end
 
     def record_data=(data)
@@ -39,11 +42,11 @@ module Memento
       action.fetch?
     end
 
-    private
-
     def set_record_data
       self.record_data = action.fetch
     end
+
+    private
 
     def action
       "memento/action/#{action_type}".classify.constantize.new(self)

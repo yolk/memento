@@ -17,7 +17,13 @@ require 'memento'
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 # catch AR schema statements
-$stdout = StringIO.new
+# $stdout = StringIO.new
+
+RSpec.configure do |config|
+  config.filter_run :focus
+  config.run_all_when_everything_filtered = true
+  config.expect_with(:rspec) { |c| c.syntax = :should }
+end
 
 def setup_db
   ActiveRecord::Schema.define(:version => 1) do
@@ -79,7 +85,7 @@ class Customer < ActiveRecord::Base
 end unless defined?(Customer)
 
 class Project < ActiveRecord::Base
-  belongs_to :customer
+  belongs_to :customer, optional: true
 
   memento_changes :ignore => :ignore_this
 end unless defined?(Project)

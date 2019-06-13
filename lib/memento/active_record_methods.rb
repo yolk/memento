@@ -54,7 +54,7 @@ module Memento::ActiveRecordMethods
     end
 
     def changes_for_memento
-      filter_attributes_for_memento(changes)
+      filter_attributes_for_memento(saved_changes)
     end
 
     def filter_attributes_for_memento(hash)

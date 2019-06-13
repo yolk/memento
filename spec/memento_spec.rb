@@ -94,7 +94,7 @@ describe Memento do
     it "should give back false when no states created" do
       Memento(@user) do
         1 + 1
-      end.should be_false
+      end.should eql(false)
     end
 
     it "should raise error in block and stop session" do

@@ -39,16 +39,6 @@ describe Memento::ActiveRecordMethods do
     Project.memento_options.should eql({:ignore=>[:ignore_this]})
   end
 
-  it "should define changes_for_memento and ignore attributes given by options" do
-    project = Project.create!(:name => "Project X")
-    project.name = "A Project"
-    project.updated_at = 5.minutes.ago
-    project.notes = "new"
-    project.ignore_this = 2
-    project.changes_for_memento.should_not == project.changes
-    project.changes_for_memento.should == {"name"=>["Project X", "A Project"], "notes"=>[nil, "new"]}
-  end
-
   it "should define has_many association to memento_states" do
     project = Project.create!(:name => "Project X")
     project.memento_states.should be_empty

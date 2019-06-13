@@ -2,6 +2,8 @@
 
 [full changelog](http://github.com/yolk/valvat/compare/v0.4.3...master)
 
+* Supports only Rails 5.1 and upwards
+
 * Fixed generators for Rails 4
 
 ### 0.4.3 / 2014-04-07
