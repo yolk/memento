@@ -1,10 +1,12 @@
 ### dev
 
-[full changelog](http://github.com/yolk/valvat/compare/v0.4.3...master)
+[full changelog](http://github.com/yolk/valvat/compare/v0.5.0...master)
+
+### 0.5.0 / 2019-06-13
+[full changelog](http://github.com/yolk/valvat/compare/v0.4.3...v0.5.0)
 
 * Added exclusive support for 1Rails 5.1 and upwards
 * Renamed record_* methods to memento_record_after_*
-
 * Fixed generators for Rails 4
 
 ### 0.4.3 / 2014-04-07
