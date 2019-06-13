@@ -2,7 +2,8 @@
 
 [full changelog](http://github.com/yolk/valvat/compare/v0.4.3...master)
 
-* Supports only Rails 5.1 and upwards
+* Added exclusive support for 1Rails 5.1 and upwards
+* Renamed record_* methods to memento_record_after_*
 
 * Fixed generators for Rails 4
 

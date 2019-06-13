@@ -30,7 +30,7 @@ module Memento::ActiveRecordMethods
       end
 
       action_types.each do |action_type|
-        send :"after_#{action_type}", :"record_#{action_type}"
+        send :"after_#{action_type}", :"memento_record_after_#{action_type}"
       end
 
       has_many :memento_states, :class_name => "Memento::State", :as => :record
@@ -70,10 +70,10 @@ module Memento::ActiveRecordMethods
     private :ignore_attributes_for_memento
 
     Memento::Action::Base.action_types.each do |action_type|
-      define_method :"record_#{action_type}" do
+      define_method :"memento_record_after_#{action_type}" do
         Memento.add_state(action_type, self)
       end
-      private :"record_#{action_type}"
+      private :"memento_record_after_#{action_type}"
     end
   end
 
