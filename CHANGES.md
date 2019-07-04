@@ -2,6 +2,8 @@
 
 [full changelog](http://github.com/yolk/valvat/compare/v0.5.0...master)
 
+* Check attribute_without_formatting method for current value
+
 ### 0.5.0 / 2019-06-13
 [full changelog](http://github.com/yolk/valvat/compare/v0.4.3...v0.5.0)
 
