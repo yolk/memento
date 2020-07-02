@@ -1,8 +1,13 @@
 ### dev
 
-[full changelog](http://github.com/yolk/valvat/compare/v0.5.1...master)
+[full changelog](http://github.com/yolk/valvat/compare/v0.5.2...master)
 
-### 0.5.0 / 2019-07-04
+### 0.5.2 / 2020-07-02
+[full changelog](http://github.com/yolk/valvat/compare/v0.5.1...v0.5.2)
+
+* Defer patching of rails base classes for zeitwerk loading
+
+### 0.5.1 / 2019-07-04
 [full changelog](http://github.com/yolk/valvat/compare/v0.5.0...v0.5.1)
 
 * Check attribute_without_formatting method for current value
