@@ -15,4 +15,6 @@ module Memento
   end
 end
 
-ActionController::Base.send(:include, Memento::ActionControllerMethods) if defined?(ActionController::Base)
+ActiveSupport.on_load(:action_controller) do
+  include Memento::ActionControllerMethods
+end

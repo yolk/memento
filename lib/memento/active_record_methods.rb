@@ -79,4 +79,6 @@ module Memento::ActiveRecordMethods
 
 end
 
-ActiveRecord::Base.send(:include, Memento::ActiveRecordMethods) if defined?(ActiveRecord::Base)
+ActiveSupport.on_load(:active_record) do
+  include Memento::ActiveRecordMethods
+end
