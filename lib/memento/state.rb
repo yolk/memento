@@ -38,12 +38,22 @@ module Memento
     end
 
     def record_data
-      @record_data ||= read_attribute(:record_data) ? Memento.serializer.load(read_attribute(:record_data)) : {}
+      @record_data ||= begin
+        raw = read_attribute(:record_data)
+        if raw.blank?
+          {}
+        else
+          data = Memento.serializer.load(raw)
+          data.is_a?(Hash) ? data.with_indifferent_access : data
+        end
+      end
     end
 
     def record_data=(data)
       @record_data = nil
-      write_attribute(:record_data, data.is_a?(String) ? data : Memento.serializer.dump(data))
+      write_attribute(:record_data, data.is_a?(String) ? data :
+        Memento.serializer.dump(data.is_a?(Hash) ? data.to_hash : data)
+      )
     end
 
     def fetch?
