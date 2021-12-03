@@ -14,15 +14,23 @@ module Memento
 
     # before_create :set_record_data
 
-    def self.store(action_type, record)
-      new do |state|
+    def self.build(action_type, record)
+      state = new do |state|
         state.action_type = action_type.to_s
         state.record = record
-        if state.fetch?
-          state.set_record_data
-          state.save
-        end
       end
+      if state.fetch?
+        state.set_record_data
+        state
+      else
+        nil
+      end
+    end
+
+    def self.store(action_type, record)
+      state = self.build(action_type, record)
+      state.save if state
+      state
     end
 
     def undo

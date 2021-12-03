@@ -11,7 +11,8 @@ module Memento
     validates_presence_of :user
 
     def add_state(action_type, record)
-      tmp_states << [action_type, record]
+      state = Memento::State.build(action_type, record)
+      tmp_states << state if state
     end
 
     def undo
@@ -42,7 +43,8 @@ module Memento
     def store_tmp_states
       return unless tmp_states.any?
       tmp_states.each do |state|
-        states.store(state[0], state[1])
+        self.states << state
+        state.save
       end
       @tmp_states = []
     end
