@@ -7,10 +7,10 @@ describe Memento::Action::Destroy, "when object gets destroyed" do
     @project = Project.create!(:name => "P1", :closed_at => 3.days.ago).reload
     Memento.start(@user)
     @project.destroy
+    Memento.stop
   end
 
   after do
-    Memento.stop
     shutdown_db
   end
 

@@ -14,7 +14,12 @@ module Memento
     def watch(user_or_id)
       start(user_or_id)
       yield
-      session && !session.new_record? && session.states.any? ? session : false
+      if session && session.tmp_states.any?
+        session.save
+        session
+      else
+        false
+      end
     ensure
       stop
     end
@@ -25,12 +30,12 @@ module Memento
     end
 
     def stop
-      session.destroy if session && session.states.count.zero?
+      session.save if session && session.tmp_states.any?
       self.session = nil
     end
 
     def add_state(action_type, record)
-      return unless save_session
+      return unless active?
       session.add_state(action_type, record)
     end
 
@@ -57,18 +62,14 @@ module Memento
       !!Thread.current[:memento_ignore]
     end
 
-    private
-
     def session
       Thread.current[:memento_session]
     end
 
+    private
+
     def session=(session)
       Thread.current[:memento_session] = session
-    end
-
-    def save_session
-      active? && (!session.changed? || session.save)
     end
   end
 end

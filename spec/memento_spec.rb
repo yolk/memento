@@ -118,18 +118,23 @@ describe Memento do
       Memento.stop
     end
 
-    it "should create memento_state for ar-object with action_type" do
+    it "should store tmp states" do
       Memento::State.count.should eql(0)
       Memento.add_state :destroy, @project
-      Memento::State.count.should eql(1)
-      Memento::State.first.action_type.should eql("destroy")
-      Memento::State.first.record.should eql(Project.last)
+      Memento.session.should be_new_record
+      Memento.session.tmp_states.size.should eql(1)
+      Memento::State.count.should eql(0)
     end
 
-    it "should save session on first added state" do
+    it "should save session and states when stopping" do
       Memento::Session.count.should eql(0)
+      Memento::State.count.should eql(0)
       Memento.add_state :destroy, @project
+      Memento::Session.count.should eql(0)
+      Memento::State.count.should eql(0)
+      Memento.stop
       Memento::Session.count.should eql(1)
+      Memento::State.count.should eql(1)
     end
 
     describe "when ignoring" do

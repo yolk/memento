@@ -11,7 +11,7 @@ module Memento
     validates_presence_of :user
 
     def add_state(action_type, record)
-      states.store(action_type, record)
+      tmp_states << [action_type, record]
     end
 
     def undo
@@ -29,6 +29,22 @@ module Memento
           raise Memento::ErrorOnRewind if results.failed?
         end
       end
+    end
+
+    def tmp_states
+      @tmp_states ||= []
+    end
+
+    private
+
+    after_save :store_tmp_states
+
+    def store_tmp_states
+      return unless tmp_states.any?
+      tmp_states.each do |state|
+        states.store(state[0], state[1])
+      end
+      @tmp_states = []
     end
   end
 end
