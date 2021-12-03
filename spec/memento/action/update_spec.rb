@@ -18,7 +18,7 @@ describe Memento::Action::Update do
 
     before do
       Memento(@user) do
-        @project.update_attributes(:name => "P2", :closed_at => @time2, :customer => @customer, :notes => "Bla bla")
+        @project.update(:name => "P2", :closed_at => @time2, :customer => @customer, :notes => "Bla bla")
       end
     end
 
@@ -68,7 +68,7 @@ describe Memento::Action::Update do
 
       describe "with mergeable unrecorded changes" do
         before do
-          @project.update_attributes({:notes => "Bla!"})
+          @project.update({:notes => "Bla!"})
           @result = Memento::Session.first.undo.first
           @object = @result.object
         end
@@ -89,9 +89,9 @@ describe Memento::Action::Update do
       describe "with mergeable recorded changes" do
         before do
           Memento(@user) do
-            @project.update_attributes({:notes => "Bla\nBla!"})
+            @project.update({:notes => "Bla\nBla!"})
           end
-          Memento::State.last.update_attributes(:created_at => 1.minute.from_now)
+          Memento::State.last.update(:created_at => 1.minute.from_now)
           @result = Memento::Session.first.undo.first
           @object = @result.object
         end
@@ -130,7 +130,7 @@ describe Memento::Action::Update do
 
       describe "with unmergeable unrecorded changes" do
         before do
-          @project.update_attributes({:name => "P3"})
+          @project.update({:name => "P3"})
           @result = Memento::Session.last.undo.first
           @object = @result.object
         end
@@ -156,7 +156,7 @@ describe Memento::Action::Update do
           Memento(@user) do
             @project.update_attributes!({:name => "P3"})
           end
-          Memento::State.last.update_attributes(:created_at => 1.minute.from_now)
+          Memento::State.last.update(:created_at => 1.minute.from_now)
           @result = Memento::Session.first.undo.first
           @object = @result.object
         end
@@ -199,7 +199,7 @@ describe Memento::Action::Update do
 
     before do
       Memento(@user) do
-        @project.update_attributes(:name => "P1", :customer => nil, :notes => "Bla bla")
+        @project.update(:name => "P1", :customer => nil, :notes => "Bla bla")
       end
     end
 

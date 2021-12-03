@@ -47,10 +47,10 @@ describe Memento::Session do
 
     describe "and all states fail" do
       before do
-        @state1.update_attributes({:record_data => {:name => ["A", "B"]}})
-        @p1.update_attributes(:name => "C")
-        @state2.update_attributes({:record_data => {:name => ["A", "B"]}})
-        @p2.update_attributes(:name => "C")
+        @state1.update({:record_data => {:name => ["A", "B"]}})
+        @p1.update(:name => "C")
+        @state2.update({:record_data => {:name => ["A", "B"]}})
+        @p2.update(:name => "C")
       end
 
       it "should keep all states" do
@@ -70,8 +70,8 @@ describe Memento::Session do
 
     describe "and some states succeed, some fail" do
       before do
-        @state1.update_attributes({:record_data => {:name => ["A", "B"]}})
-        @p1.update_attributes(:name => "C")
+        @state1.update({:record_data => {:name => ["A", "B"]}})
+        @p1.update(:name => "C")
       end
 
       it "should keep all states when using undo!" do
