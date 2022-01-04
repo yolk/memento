@@ -14,7 +14,7 @@ module Memento
 
     # before_create :set_record_data
 
-    def self.build(action_type, record)
+    def self.add(action_type, record)
       state = new do |state|
         state.action_type = action_type.to_s
         state.record = record
@@ -25,12 +25,6 @@ module Memento
       else
         nil
       end
-    end
-
-    def self.store(action_type, record)
-      state = self.build(action_type, record)
-      state.save if state
-      state
     end
 
     def undo

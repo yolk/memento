@@ -11,7 +11,7 @@ module Memento
     validates_presence_of :user
 
     def add_state(action_type, record)
-      state = Memento::State.build(action_type, record)
+      state = Memento::State.add(action_type, record)
       tmp_states << state if state
     end
 

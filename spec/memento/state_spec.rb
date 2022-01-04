@@ -32,7 +32,8 @@ describe Memento::State do
 
   describe "valid State" do
     before do
-      @state = @session.states.store("destroy", @project = Project.create(:name => "A"))
+      @state = @session.states.add("destroy", @project = Project.create(:name => "A"))
+      @state.save if @state
       @project.destroy
     end
 
