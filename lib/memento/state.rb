@@ -5,14 +5,10 @@ module Memento
     belongs_to :session, :class_name => "Memento::Session"
     belongs_to :record, :polymorphic => true
 
-    # attr_accessible nil
-
     validates_presence_of :session
     validates_presence_of :record
     validates_presence_of :action_type
     validates_inclusion_of :action_type, :in => Memento::Action::Base.action_types, :allow_blank => true
-
-    # before_create :set_record_data
 
     def self.add(action_type, record)
       state = new do |state|
@@ -20,7 +16,7 @@ module Memento
         state.record = record
       end
       if state.fetch?
-        state.set_record_data
+        state.record_data = action.fetch
         state
       else
         nil
@@ -52,10 +48,6 @@ module Memento
 
     def fetch?
       action.fetch?
-    end
-
-    def set_record_data
-      self.record_data = action.fetch
     end
 
     private
