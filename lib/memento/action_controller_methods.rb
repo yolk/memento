@@ -3,7 +3,7 @@ module Memento
 
     def memento
       block_result = nil
-      memento_session = Memento(current_user) do
+      memento_session = Memento.watch(current_user) do
         block_result = yield
       end
       if memento_session
