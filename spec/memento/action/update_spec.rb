@@ -82,7 +82,7 @@ describe Memento::Action::Update do
           @object.name.should eql("P1")
           @object.customer.should be_nil
           @object.closed_at.to_s.should eql(@time1.to_s)
-          @object.notes.should eql("Bla!")
+          @object.attributes['notes'].should eql("Bla!")
         end
       end
 
@@ -105,7 +105,7 @@ describe Memento::Action::Update do
           @object.name.should eql("P1")
           @object.customer.should be_nil
           @object.closed_at.to_s.should eql(@time1.to_s)
-          @object.notes.should eql("Bla\nBla!")
+          @object.attributes['notes'].should eql("Bla\nBla!")
         end
 
         describe "when second state is undone" do
@@ -123,7 +123,7 @@ describe Memento::Action::Update do
             @object.name.should eql("P1")
             @object.customer.should be_nil
             @object.closed_at.to_s.should eql(@time1.to_s)
-            @object.notes.should eql("Bla bla")
+            @object.attributes['notes'].should eql("Bla bla")
           end
         end
       end
@@ -187,7 +187,7 @@ describe Memento::Action::Update do
             @object.name.should eql("P2")
             @object.customer.should eql(@customer)
             @object.closed_at.to_s.should eql(@time2.to_s)
-            @object.notes.should eql("Bla bla")
+            @object.attributes['notes'].should eql("Bla bla")
           end
         end
       end

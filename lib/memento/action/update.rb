@@ -34,9 +34,7 @@ module Memento
       record_data.all? do |attribute, values|
         # ugly fix to compare times
         values = values.map{|v| v.is_a?(Time) ? v.to_s(:db) : v }
-        current_value = record.respond_to?(:"#{attribute}_without_formatting") ?
-          record.send(:"#{attribute}_without_formatting") :
-          record.send(:"#{attribute}")
+        current_value = record.attributes[attribute]
         current_value = current_value.utc.to_s(:db) if current_value.is_a?(Time)
         values.include?(current_value) || (current_value.is_a?(String) && values.include?(current_value.gsub(/\r\n/, "\n")))
       end || record_data.size.zero?

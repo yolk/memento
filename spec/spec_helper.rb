@@ -88,6 +88,10 @@ class Project < ActiveRecord::Base
   belongs_to :customer, optional: true
 
   memento_changes :ignore => :ignore_this
+
+  def notes
+    super.reverse
+  end
 end unless defined?(Project)
 
 class TimestamplessObject < ActiveRecord::Base
