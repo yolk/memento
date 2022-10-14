@@ -16,7 +16,7 @@ module Memento
         state.record = record
       end
       if state.fetch?
-        state.record_data = action.fetch
+        state.set_record_data
         state
       else
         nil
@@ -48,6 +48,10 @@ module Memento
 
     def fetch?
       action.fetch?
+    end
+
+    def set_record_data
+      self.record_data = action.fetch
     end
 
     private
