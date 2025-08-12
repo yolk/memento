@@ -7,6 +7,7 @@ module Memento
 
     def undo
       rebuild_object do |object|
+        object.send(:memento_before_save_on_undo) if object.respond_to?(:memento_before_save_on_undo, true)
         begin
           object.save!
         rescue
