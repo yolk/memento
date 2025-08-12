@@ -26,6 +26,7 @@ module Memento
         record_data.each do |attribute, values|
           object.send(:"#{attribute}=", values.first)
         end
+        object.send(:memento_before_update_save) if object.respond_to?(:memento_before_update_save, true)
         object.save!
       end
     end
